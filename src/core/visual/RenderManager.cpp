@@ -17,7 +17,9 @@ extern "C" {
 #ifndef __STDC_CONSTANT_MACROS
 #define __STDC_CONSTANT_MACROS
 #endif
+#if MY_USE_FFMPEG
 #include "libswscale/swscale.h"
+#endif
 };
 #include "opencv2/opencv.hpp"
 #include "Application.h"

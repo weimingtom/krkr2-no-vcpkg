@@ -2,9 +2,11 @@
 
 #include "KRMovieDef.h"
 
+#if MY_USE_FFMPEG
 extern "C" {
 #include "libavcodec/avcodec.h"
 }
+#endif
 
 #include <vector>
 #include <string>
@@ -37,10 +39,12 @@ public:
         uniqueId = 0;
         dvdNavId = 0;
         demuxerId = -1;
+#if MY_USE_FFMPEG
         codec = (AVCodecID)0; // AV_CODEC_ID_NONE
         codec_fourcc = 0;
         profile = FF_PROFILE_UNKNOWN;
         level = FF_LEVEL_UNKNOWN;
+#endif        
         type = STREAM_NONE;
         source = STREAM_SOURCE_NONE;
         iDuration = 0;
@@ -62,7 +66,9 @@ public:
     int uniqueId; // unique stream id
     int dvdNavId;
     int64_t demuxerId; // id of the associated demuxer
+#if MY_USE_FFMPEG    
     AVCodecID codec;
+#endif    
     unsigned int codec_fourcc; // if available
     int profile; // encoder profile of the stream reported by the
                  // decoder. used to qualify hw decoders.

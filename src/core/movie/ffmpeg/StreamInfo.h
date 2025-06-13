@@ -3,9 +3,11 @@
 #include "KRMovieDef.h"
 #include "Demux.h"
 
+#if MY_USE_FFMPEG
 extern "C" {
 #include "libavcodec/avcodec.h"
 }
+#endif
 
 NS_KRMOVIE_BEGIN
 struct CDVDStreamInfo {
@@ -26,7 +28,9 @@ struct CDVDStreamInfo {
 
     void Assign(const CDemuxStream &right, bool withextradata);
 
+#if MY_USE_FFMPEG
     AVCodecID codec;
+#endif
     // StreamType type;
     int uniqueId;
     bool realtime;

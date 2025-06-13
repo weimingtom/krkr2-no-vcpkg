@@ -1,5 +1,8 @@
 #sudo apt install libglew-dev libfreetype-dev libglfw3-dev libsdl2-dev libvorbis-dev libwebp-dev  libboost-locale-dev libfmt-dev libopencv-dev libturbojpeg0-dev liblz4-dev libspdlog-dev libopenal-dev libgtk2.0-dev libarchive-dev libopusfile-dev libminizip-dev
 
+#src/core/environ/Application.cpp
+#ExtractFileDir
+
 #FIXME:not used
 #libavfilter-dev libavutil-dev 
 
@@ -43,7 +46,9 @@
 #sudo apt install libopencv-dev
 #src/core/visual/ogl/RenderManager_ogl.cpp
 
+#src/core/visual/LoadJPEG.cpp
 #sudo apt install libturbojpeg0-dev
+
 #sudo apt install liblz4-dev
 #(done) src/core/visual/RenderManager.cpp
 #///usr/include/opencv4/opencv2/features2d.hpp:114:47: error: ‘KeyPoint’ was not declared in this scope; did you mean ‘Point’?
@@ -337,6 +342,9 @@ CPPFLAGS += -I/usr/include/cairo -I/usr/include/pango-1.0
 CPPFLAGS += -I/usr/include/harfbuzz
 CPPFLAGS += -I/usr/lib/x86_64-linux-gnu/gtk-2.0/include
 CPPFLAGS += -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/atk-1.0
+#Fedora41
+CPPFLAGS += -I/usr/lib64/glib-2.0/include
+CPPFLAGS += -I/usr/lib64/gtk-2.0/include
 
 CPPFLAGS += -I/usr/include/opus
 
@@ -375,10 +383,10 @@ LDFLAGS += -lSDL2
 #LDFLAGS += -lboost-locale
 LDFLAGS += -lfmt
 #LDFLAGS += -lavcodec -lavformat -lavfilter -lswscale -lswresample
-LDFLAGS += -lavutil
+#LDFLAGS += -lavutil
 # or -lopencv_imgproc -lopencv_core
 LDFLAGS += `pkg-config --libs opencv4`
-LDFLAGS += -lturbojpeg
+#LDFLAGS += -lturbojpeg
 LDFLAGS += -llz4
 LDFLAGS += -lspdlog
 LDFLAGS += -lopenal

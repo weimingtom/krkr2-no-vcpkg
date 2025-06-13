@@ -30,9 +30,13 @@
 #include <thread>
 #include "ConfigManager/LocaleConfigManager.h"
 #include "StorageIntf.h"
+#if MY_USE_FFMPEG
 extern "C" {
 #include <libavutil/avstring.h>
 }
+#else
+#include <libgen.h> //dirname
+#endif
 #include "TVPColor.h"
 #include "FontImpl.h"
 
@@ -865,7 +869,11 @@ void TVPDeleteAcceleratorKeyTable( HWND hWnd ) {
 void TVPInitWindowOptions() { ; }
 
 std::string ExtractFileDir(const std::string &FileName) {
+#if MY_USE_FFMPEG
     return av_dirname((char *)FileName.c_str());
+#else
+    return dirname((char *)FileName.c_str());
+#endif
 }
 
 unsigned long ColorToRGB(unsigned int col) {

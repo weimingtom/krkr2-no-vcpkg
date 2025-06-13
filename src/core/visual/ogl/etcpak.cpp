@@ -3,7 +3,9 @@
 #include <assert.h>
 #include <cstdint>
 #include <algorithm>
+#if MY_USE_FFMPEG
 #include <libavutil/mathematics.h>
+#endif
 #include <future>
 #include <cmath>
 #include "tvpgl.h"

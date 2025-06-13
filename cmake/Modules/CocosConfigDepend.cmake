@@ -6,7 +6,9 @@ macro(cocos2dx_depend)
         list(APPEND PLATFORM_SPECIFIC_LIBS ws2_32 userenv psapi winmm Version Iphlpapi opengl32)
     elseif(LINUX)
         # need review those libs: X11 Xi Xrandr Xxf86vm Xinerama Xcursor rt m
-        list(APPEND PLATFORM_SPECIFIC_LIBS dl X11 Xi Xrandr Xxf86vm Xinerama Xcursor rt m)
+#        list(APPEND PLATFORM_SPECIFIC_LIBS dl X11 Xi Xrandr Xxf86vm Xinerama Xcursor rt m)
+#fedora no Xxf86vm
+        list(APPEND PLATFORM_SPECIFIC_LIBS dl X11 Xi Xrandr Xinerama Xcursor rt m)
         # use older cmake style on below linux libs
 
 #FIXME:added
