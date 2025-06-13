@@ -224,6 +224,9 @@ CPPFLAGS += -Wno-deprecated-declarations
 #CPPFLAGS += -Wno-reorder 
 CPPFLAGS += -Wall 
 
+#Only for ArchLinux, only for c not for c++
+#CPPFLAGS += -Wno-incompatible-pointer-types
+
 #################
 #kirikiroid2
 CPPFLAGS += -DCC_ENABLE_CHIPMUNK_INTEGRATION=1 -fsigned-char
@@ -384,8 +387,11 @@ LDFLAGS += -lSDL2
 LDFLAGS += -lfmt
 #LDFLAGS += -lavcodec -lavformat -lavfilter -lswscale -lswresample
 #LDFLAGS += -lavutil
-# or -lopencv_imgproc -lopencv_core
-LDFLAGS += `pkg-config --libs opencv4`
+
+# In ArchLinux, using pkg-config will cause linking failed 
+#LDFLAGS += `pkg-config --libs opencv4`
+LDFLAGS += -lopencv_imgproc -lopencv_core
+
 #LDFLAGS += -lturbojpeg
 LDFLAGS += -llz4
 LDFLAGS += -lspdlog

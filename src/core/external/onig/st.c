@@ -38,15 +38,15 @@ struct st_table_entry {
 static int numcmp(long, long);
 static int numhash(long);
 static struct st_hash_type type_numhash = {
-    numcmp,
-    numhash,
+    (int (*)(st_data_t, st_data_t))numcmp,
+    (int (*)(st_data_t))numhash,
 };
 
 /* extern int strcmp(const char *, const char *); */
 static int strhash(const char *);
 static struct st_hash_type type_strhash = {
-    strcmp,
-    strhash,
+    (int (*)(st_data_t, st_data_t))strcmp,
+    (int (*)(st_data_t))strhash,
 };
 
 static void rehash(st_table *);
@@ -477,7 +477,7 @@ st_cleanup_safe(table, never)
 int
 st_foreach(table, func, arg)
     st_table *table;
-    int (*func)();
+    int (*func)(st_data_t, st_data_t, st_data_t);
     st_data_t arg;
 {
     st_table_entry *ptr, *last, *tmp;

@@ -191,8 +191,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     fmt
 #    avcodec avformat avfilter swscale swresample
 #    avutil
-#pkg-config -ibs opencv4
-#    opencv_stitching opencv_aruco opencv_bgsegm opencv_bioinspired opencv_ccalib opencv_dnn_objdetect opencv_dnn_superres opencv_dpm opencv_highgui opencv_face opencv_freetype opencv_fuzzy opencv_hdf opencv_hfs opencv_img_hash opencv_line_descriptor opencv_quality opencv_reg opencv_rgbd opencv_saliency opencv_shape opencv_stereo opencv_structured_light opencv_phase_unwrapping opencv_superres opencv_optflow opencv_surface_matching opencv_tracking opencv_datasets opencv_text opencv_dnn opencv_plot opencv_ml opencv_videostab opencv_videoio opencv_viz opencv_ximgproc opencv_video opencv_xobjdetect opencv_objdetect opencv_calib3d opencv_imgcodecs opencv_features2d opencv_flann opencv_xphoto opencv_photo opencv_imgproc opencv_core
+#pkg-config --libs opencv4
     opencv_imgproc opencv_core
 #    turbojpeg
     lz4
