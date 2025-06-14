@@ -55,9 +55,12 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     /usr/include/webp
     /usr/include/opencv4
     /usr/include/freetype2
-#FXIME:for Fedora    
+#FIXME:for Fedora    
     PUBLIC /usr/lib64/glib-2.0/include
     PUBLIC /usr/lib64/gtk-2.0/include    
+#FIXME:Raspberry Pi 4, FIXME: two places
+    PUBLIC /usr/lib/arm-linux-gnueabihf/glib-2.0/include
+    PUBLIC /usr/lib/arm-linux-gnueabihf/gtk-2.0/include    
 )
 #FIXME:added, ../../external, ../../cocos
 

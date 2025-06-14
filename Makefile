@@ -348,6 +348,9 @@ CPPFLAGS += -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/atk-1.0
 #Fedora41
 CPPFLAGS += -I/usr/lib64/glib-2.0/include
 CPPFLAGS += -I/usr/lib64/gtk-2.0/include
+#Raspberry Pi 4
+CPPFLAGS += -I/usr/lib/arm-linux-gnueabihf/glib-2.0/include
+CPPFLAGS += -I/usr/lib/arm-linux-gnueabihf/gtk-2.0/include
 
 CPPFLAGS += -I/usr/include/opus
 
