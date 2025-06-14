@@ -31,3 +31,10 @@
 * \# cp -r ./_testdata /home/wmt/_testdata
 * \# make clean && make -j8 && make test
 * \# mkdir build && cd build && cmake .. && make -j8 && ./bin/krkr2/krkr2 && cd ..
+
+## For Raspberry Pi OS 2023-05-03 Raspios Bullseye (Debian 11), arm32 (armhf), in Raspberry Pi 4B
+* $ sudo apt update
+* $ sudo apt install lftp gedit pkg-config make gcc g++ cmake
+* $ sudo apt install libglew-dev libfreetype-dev libglfw3-dev libsdl2-dev libvorbis-dev libwebp-dev  libboost-locale-dev libfmt-dev libopencv-dev liblz4-dev libspdlog-dev libopenal-dev libgtk2.0-dev libarchive-dev libopusfile-dev libminizip-dev libjpeg-dev
+* $ make clean && make -j4 && make test
+* $ mkdir build && cd build && cmake .. && make -j4 && ./bin/krkr2/krkr2 && cd ..
