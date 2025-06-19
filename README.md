@@ -1,6 +1,13 @@
 # krkr2-no-vcpkg
 [WIP and not recommended] build krkr2 kirikiroid2 vcpkg version without vcpkg, with apt install instead
 
+## Bugs
+* Android: Exit/Save will cause loop and no response
+
+## TODO
+* Port to msys2
+* Linux build not tested
+
 ## Recommended Development Environment for good audio music output 
 * Xubuntu 20.04 desktop amd64, in VMWare or VirtualBox  
 * Fedora 41 x86_64, in VirtualBox  
