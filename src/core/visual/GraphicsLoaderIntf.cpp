@@ -78,9 +78,11 @@ static void TVPLoadGraphicRouter(void *formatdata, void *callbackdata,
             return CALL_LOAD_FUNC(TVPLoadBPG);
         }
 #endif
+#if !MY_USE_MINLIB
         if(!memcmp(header, "RIFF", 4) && !memcmp(header + 8, "WEBPVP8", 7)) {
             return CALL_LOAD_FUNC(TVPLoadWEBP);
         }
+#endif
 #if MY_USE_LIBJXR
         if(!memcmp(header, "\x49\x49\xbc\x01", 4)) {
             return CALL_LOAD_FUNC(TVPLoadJXR);
@@ -119,9 +121,11 @@ static void TVPLoadHeaderRouter(void *formatdata, tTJSBinaryStream *src,
             return CALL_LOAD_FUNC(TVPLoadHeaderBPG);
         }
 #endif
+#if !MY_USE_MINLIB
         if(!memcmp(header, "RIFF", 4) && !memcmp(header + 8, "WEBPVP8", 7)) {
             return CALL_LOAD_FUNC(TVPLoadHeaderWEBP);
         }
+#endif
 #if MY_USE_LIBJXR
         if(!memcmp(header, "\x49\x49\xbc\x01", 4)) {
             return CALL_LOAD_FUNC(TVPLoadHeaderJXR);
@@ -187,9 +191,11 @@ public:
             TJS_W(".bpg"), TVPLoadGraphicRouter, TVPLoadHeaderRouter, nullptr,
             nullptr, nullptr));
 #endif
+#if !MY_USE_MINLIB
         Handlers.push_back(tTVPGraphicHandlerType(
             TJS_W(".webp"), TVPLoadGraphicRouter, TVPLoadHeaderRouter, nullptr,
             nullptr, nullptr));
+#endif
         Handlers.push_back(tTVPGraphicHandlerType(
             TJS_W(".bmp"), TVPLoadGraphicRouter, TVPLoadHeaderRouter,
             TVPSaveAsBMP, TVPAcceptSaveAsBMP, nullptr));

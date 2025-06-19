@@ -11,7 +11,9 @@
 #include "tjsCommHead.h"
 
 #include <algorithm>
+#if !MY_USE_MINLIB
 #include <spdlog/spdlog.h>
+#endif
 #include "tjsInterCodeGen.h"
 #include "tjsScriptBlock.h"
 #include "tjsGlobalStringMap.h"
@@ -45,8 +47,12 @@ namespace TJS // following is in the namespace
     }
 
     void parser::error(const std::string &msg) {
+#if !MY_USE_MINLIB		
         spdlog::get("tjs2")->critical(msg);
-    }
+#else
+		fprintf(stderr, "[tjs2] %s\n", msg.c_str());
+#endif
+	}
 
     //---------------------------------------------------------------------------
     int _yyerror(const tjs_char *msg, tTJSScriptBlock *pm, tjs_int pos) {
@@ -80,7 +86,13 @@ namespace TJS // following is in the namespace
         }
 
         sb->CompileErrorCount++;
+#if !MY_USE_MINLIB
         str += { fmt::format(" at line {}", 1 + sb->SrcPosToLine(errpos)) };
+#else
+		tjs_char buf[43];
+		swprintf((wchar_t *)buf, sizeof(buf)/sizeof(tjs_char), L" at line %d", 1+sb->SrcPosToLine(errpos));
+		str += buf;
+#endif	
         sb->GetTJS()->OutputToConsole(str.c_str());
 
         return 0;
@@ -571,8 +583,14 @@ namespace TJS // following is in the namespace
         str += TJS_W(" at ");
         str += Block->GetName();
 
+#if !MY_USE_MINLIB
         str += { fmt::format(" line {}", 1 + Block->SrcPosToLine(errpos)) };
-
+#else
+		tjs_char buf[43];
+		swprintf((wchar_t *)buf, sizeof(buf)/sizeof(tjs_char), L" line %d", 1+Block->SrcPosToLine(errpos));
+		str += buf;
+#endif
+		
         Block->GetTJS()->OutputToConsole(str.c_str());
     }
     //---------------------------------------------------------------------------

@@ -12,8 +12,12 @@
 #ifndef tjsStringH
 #define tjsStringH
 
+#if !MY_USE_MINLIB 
 #include <boost/locale.hpp>
 #include <fmt/printf.h>
+#else
+#include "CharacterSet.h"
+#endif
 
 #include <string>
 #include "tjsConfig.h"
@@ -112,8 +116,29 @@ namespace TJS {
         }
 
         [[nodiscard]] std::wstring toWString() const {
+#if !MY_USE_MINLIB		
             return boost::locale::conv::utf_to_utf<wchar_t>(
                 AsNarrowStdString());
+#else
+            std::string in_ = AsNarrowStdString();
+		    tjs_int len = TVPUtf8ToWideCharString(in_.c_str(), 0, nullptr);
+		    if(len < 0)
+		        return L"";
+		    tjs_char *buf = new tjs_char[len];
+			std::wstring out;
+		    if(buf) {
+		        try {
+		            len = TVPUtf8ToWideCharString(in_.c_str(), len, buf);
+		            if(len > 0)
+		                out.assign((wchar_t *)buf, len);
+		            delete[] buf;
+		        } catch(...) {
+		            delete[] buf;
+		            throw;
+		        }
+		    }
+		    return out;
+#endif
         }
 
         [[nodiscard]] std::string AsStdString() const {
@@ -362,6 +387,7 @@ namespace TJS {
 
         template <typename... T>
         size_t printf(const char *format, const T &...args) {
+#if !MY_USE_MINLIB		
             std::u16string utf16_string =
                 boost::locale::conv::utf_to_utf<char16_t>(
                     fmt::sprintf(format, args...));
@@ -370,6 +396,34 @@ namespace TJS {
             TJS_strcpy(const_cast<tjs_char *>(c_str()), utf16_string.c_str());
             FixLen();
             return len;
+#else
+            char str[256] = {0};
+            snprintf(str, 255, format, args...);
+
+
+            std::string in_ = AsNarrowStdString();
+		    tjs_int len = TVPUtf8ToWideCharString(str, 0, nullptr);
+		    tjs_char *buf = new tjs_char[0];
+			if(len < 0) {
+		    
+			} else {
+				tjs_char *buf = new tjs_char[len];
+			    if(buf) {
+			        try {
+			            len = TVPUtf8ToWideCharString(str, len, buf);
+			        } catch(...) {
+			            throw;
+			        }
+			    }
+			}
+            AllocBuffer(len);
+            TJS_strcpy(const_cast<tjs_char *>(c_str()), buf);
+            FixLen();
+            if (buf) {
+				delete[] buf;
+			} 
+			return len;
+#endif
         }
 
         [[nodiscard]] tTJSString
@@ -420,8 +474,19 @@ namespace TJS {
             return InternalIndepend();
         }
 
+#if 0//!MY_USE_MINLIB		
         [[nodiscard]] tjs_int GetLen() const { return Ptr->GetLength(); }
-
+#else
+		[[nodiscard]] tjs_int GetLen() const { 
+		//#ifdef __CODEGUARD__
+		//FIXME:#if defined(LINUX), if without this code, then gcc -O3 -g0 and run will crash
+		#if 1
+				if(!Ptr) return 0; // tTJSVariantString::GetLength can return zero if 'this' is NULL
+		#endif
+				return Ptr->GetLength();
+		}
+#endif
+		
         [[nodiscard]] tjs_int length() const { return GetLen(); }
 
         [[nodiscard]] tjs_char GetLastChar() const {

@@ -48,7 +48,9 @@
 #include "UserEvent.h"
 #include "NativeEventQueue.h"
 #include "Platform.h"
+#if !MY_USE_MINLIB
 #include <fmt/printf.h>
+#endif
 
 //---------------------------------------------------------------------------
 // Options management
@@ -1980,11 +1982,18 @@ void tTJSNI_WaveSoundBuffer::Invalidate() {
 //---------------------------------------------------------------------------
 void tTJSNI_WaveSoundBuffer::ThrowSoundBufferException(const ttstr &reason) {
 
+#if !MY_USE_MINLIB
     TVPThrowExceptionMessage(
         TVPCannotCreateDSSecondaryBuffer, reason,
         ttstr{ fmt::sprintf("frequency=%d/channels=%d/bits=%d",
                             InputFormat.SamplesPerSec, InputFormat.Channels,
                             InputFormat.BitsPerSample) });
+#else
+	TVPThrowExceptionMessage(TVPCannotCreateDSSecondaryBuffer,
+		reason, ttstr().printf("frequency=%d/channels=%d/bits=%d",
+		InputFormat.SamplesPerSec, InputFormat.Channels,
+		InputFormat.BitsPerSample));
+#endif
 }
 
 //---------------------------------------------------------------------------
@@ -2919,7 +2928,7 @@ void tTJSNI_WaveSoundBuffer::StartPlay() {
 
         // start playing
         if(!Paused) {
-            SoundBuffer->Play(/*0, 0, DSBPLAY_LOOPING*/);
+            if (SoundBuffer) SoundBuffer->Play(/*0, 0, DSBPLAY_LOOPING*/);
             DSBufferPlaying = true;
         }
 

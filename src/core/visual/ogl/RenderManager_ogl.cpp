@@ -18,7 +18,12 @@
 #include "base/CCEventType.h"
 #include "Platform.h"
 #include "ConfigManager/IndividualConfigManager.h"
+#if !MY_USE_MINLIB
 #include "opencv2/opencv.hpp"
+#else
+#include "opencv2/core.hpp"
+#include "opencv2/imgproc.hpp"
+#endif
 #include <deque>
 #include <algorithm>
 #include <unordered_set>

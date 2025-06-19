@@ -47,7 +47,15 @@ THE SOFTWARE.
 #define  LOG_TAG    "main"
 #define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,LOG_TAG,__VA_ARGS__)
 
+//#if !MY_USE_MINLIB
+//This function have to be weak, otherwise linked failed
+//But need to be careful, decaration of funcion cocos_android_app_init must be very same, see main.cpp
+//This function is changed in different versions of cocos2d-x
 void cocos_android_app_init(JNIEnv* env) __attribute__((weak));
+//#else
+//(x, not need) For Stop making #00 pc 00000000  <unknown> runtime error
+//(x, not need) void cocos_android_app_init(JNIEnv* env);
+//#endif
 
 void cocos_audioengine_focus_change(int focusChange);
 
@@ -79,10 +87,15 @@ extern "C"
 
 JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved)
 {
+LOGD("%s", "JNI_OnLoad 1");	
     JniHelper::setJavaVM(vm);
-
+LOGD("%s", "JNI_OnLoad 2");
+//#if !MY_USE_MINLIB	
     cocos_android_app_init(JniHelper::getEnv());
-
+//#else
+//	//skip
+//#endif
+LOGD("%s", "JNI_OnLoad 3");
     return JNI_VERSION_1_4;
 }
 
@@ -112,11 +125,19 @@ JNIEXPORT void Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeInit(JNIEnv*  env, j
         director->getEventDispatcher()->dispatchEvent(&recreatedEvent);
         director->setGLDefaultValues();
     }
+#if !MY_USE_MINLIB	
     cocos2d::network::_preloadJavaDownloaderClass();
+#endif
 }
 
 JNIEXPORT jintArray Java_org_cocos2dx_lib_Cocos2dxActivity_getGLContextAttrs(JNIEnv*  env, jobject thiz)
 {
+//#if !MY_USE_MINLIB	
+//	//skip
+//#else
+//    cocos_android_app_init(JniHelper::getEnv());
+//#endif
+
     cocos2d::Application::getInstance()->initGLContextAttrs(); 
     GLContextAttrs _glContextAttrs = GLView::getGLContextAttrs();
     

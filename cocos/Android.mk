@@ -189,34 +189,12 @@ renderer/CCVertexIndexData.cpp \
 renderer/ccGLStateCache.cpp \
 renderer/CCFrameBuffer.cpp \
 renderer/ccShaders.cpp \
-vr/CCVRDistortion.cpp \
-vr/CCVRDistortionMesh.cpp \
-vr/CCVRGenericRenderer.cpp \
-vr/CCVRGenericHeadTracker.cpp \
 deprecated/CCArray.cpp \
 deprecated/CCDeprecated.cpp \
 deprecated/CCDictionary.cpp \
 deprecated/CCNotificationCenter.cpp \
 deprecated/CCSet.cpp \
 deprecated/CCString.cpp \
-physics/CCPhysicsBody.cpp \
-physics/CCPhysicsContact.cpp \
-physics/CCPhysicsJoint.cpp \
-physics/CCPhysicsShape.cpp \
-physics/CCPhysicsWorld.cpp \
-physics3d/CCPhysics3D.cpp \
-physics3d/CCPhysics3DWorld.cpp \
-physics3d/CCPhysics3DComponent.cpp \
-physics3d/CCPhysics3DDebugDrawer.cpp \
-physics3d/CCPhysics3DObject.cpp \
-physics3d/CCPhysics3DShape.cpp \
-physics3d/CCPhysicsSprite3D.cpp \
-physics3d/CCPhysics3DConstraint.cpp \
-navmesh/CCNavMesh.cpp \
-navmesh/CCNavMeshAgent.cpp \
-navmesh/CCNavMeshDebugDraw.cpp \
-navmesh/CCNavMeshObstacle.cpp \
-navmesh/CCNavMeshUtils.cpp \
 ../external/ConvertUTF/ConvertUTFWrapper.cpp \
 ../external/ConvertUTF/ConvertUTF.c \
 ../external/md5/md5.c \
@@ -233,6 +211,28 @@ navmesh/CCNavMeshUtils.cpp \
 ../external/poly2tri/sweep/sweep.cc \
 ../external/clipper/clipper.cpp
 
+#physics/CCPhysicsBody.cpp \
+#physics/CCPhysicsContact.cpp \
+#physics/CCPhysicsJoint.cpp \
+#physics/CCPhysicsShape.cpp \
+#physics/CCPhysicsWorld.cpp \
+#physics3d/CCPhysics3D.cpp \
+#physics3d/CCPhysics3DWorld.cpp \
+#physics3d/CCPhysics3DComponent.cpp \
+#physics3d/CCPhysics3DDebugDrawer.cpp \
+#physics3d/CCPhysics3DObject.cpp \
+#physics3d/CCPhysics3DShape.cpp \
+#physics3d/CCPhysicsSprite3D.cpp \
+#physics3d/CCPhysics3DConstraint.cpp \
+#vr/CCVRDistortion.cpp \
+#vr/CCVRDistortionMesh.cpp \
+#vr/CCVRGenericRenderer.cpp \
+#vr/CCVRGenericHeadTracker.cpp \
+#navmesh/CCNavMesh.cpp \
+#navmesh/CCNavMeshAgent.cpp \
+#navmesh/CCNavMeshDebugDraw.cpp \
+#navmesh/CCNavMeshObstacle.cpp \
+#navmesh/CCNavMeshUtils.cpp \
 
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH) \
                     $(LOCAL_PATH)/. \
@@ -240,46 +240,57 @@ LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH) \
                     $(LOCAL_PATH)/../external \
                     $(LOCAL_PATH)/../external/tinyxml2 \
                     $(LOCAL_PATH)/../external/unzip \
-                    $(LOCAL_PATH)/../external/chipmunk/include/chipmunk \
-                    $(LOCAL_PATH)/../external/bullet/include/bullet \
                     $(LOCAL_PATH)/../external/xxhash \
-                    $(LOCAL_PATH)/../external/nslog \
                     $(LOCAL_PATH)/../external/poly2tri \
                     $(LOCAL_PATH)/../external/poly2tri/common \
                     $(LOCAL_PATH)/../external/poly2tri/sweep \
                     $(LOCAL_PATH)/../external/clipper \
                     $(LOCAL_PATH)/../external/uv/include
 
+#                    $(LOCAL_PATH)/../external/chipmunk/include/chipmunk \
+#                    $(LOCAL_PATH)/../external/bullet/include/bullet \
+#                    $(LOCAL_PATH)/../external/nslog \
+
+		    
 LOCAL_C_INCLUDES := $(LOCAL_PATH) \
                     $(LOCAL_PATH)/../external \
                     $(LOCAL_PATH)/../external/tinyxml2 \
                     $(LOCAL_PATH)/../external/unzip \
-                    $(LOCAL_PATH)/../external/chipmunk/include/chipmunk \
-                    $(LOCAL_PATH)/../external/bullet/include/bullet \
                     $(LOCAL_PATH)/../external/edtaa3func \
                     $(LOCAL_PATH)/../external/xxhash \
                     $(LOCAL_PATH)/../external/ConvertUTF \
-                    $(LOCAL_PATH)/../external/nslog \
                     $(LOCAL_PATH)/../external/poly2tri \
                     $(LOCAL_PATH)/../external/poly2tri/common \
                     $(LOCAL_PATH)/../external/poly2tri/sweep \
                     $(LOCAL_PATH)/../external/clipper \
                     $(LOCAL_PATH)/../external/uv/include
+
+#                    $(LOCAL_PATH)/../external/chipmunk/include/chipmunk \
+#                    $(LOCAL_PATH)/../external/bullet/include/bullet \
+#                    $(LOCAL_PATH)/../external/nslog \
+		    
 
 LOCAL_EXPORT_LDLIBS := -lGLESv2 \
                        -llog \
                        -landroid
 
-LOCAL_STATIC_LIBRARIES := ext_freetype2
-LOCAL_STATIC_LIBRARIES += ext_png
-LOCAL_STATIC_LIBRARIES += ext_jpeg
-LOCAL_STATIC_LIBRARIES += ext_tiff
-LOCAL_STATIC_LIBRARIES += ext_webp
-LOCAL_STATIC_LIBRARIES += ext_chipmunk 
-LOCAL_STATIC_LIBRARIES += ext_zlib
-LOCAL_STATIC_LIBRARIES += ext_ssl
-LOCAL_STATIC_LIBRARIES += ext_recast
-LOCAL_STATIC_LIBRARIES += ext_bullet
+#LOCAL_STATIC_LIBRARIES := ext_freetype2
+#LOCAL_STATIC_LIBRARIES += ext_png
+#LOCAL_STATIC_LIBRARIES += ext_jpeg
+LOCAL_STATIC_LIBRARIES := cocos_freetype2_static
+LOCAL_STATIC_LIBRARIES += cocos_png_static
+LOCAL_STATIC_LIBRARIES += cocos_jpeg_static
+
+#LOCAL_STATIC_LIBRARIES += ext_tiff
+#LOCAL_STATIC_LIBRARIES += ext_webp
+#LOCAL_STATIC_LIBRARIES += ext_chipmunk 
+
+#LOCAL_STATIC_LIBRARIES += ext_zlib
+LOCAL_STATIC_LIBRARIES += cocos_zlib_static
+
+#LOCAL_STATIC_LIBRARIES += ext_ssl
+#LOCAL_STATIC_LIBRARIES += ext_recast
+#LOCAL_STATIC_LIBRARIES += ext_bullet
 
 LOCAL_WHOLE_STATIC_LIBRARIES := ccandroid
 LOCAL_WHOLE_STATIC_LIBRARIES += cpufeatures
@@ -294,8 +305,15 @@ LOCAL_CFLAGS   +=  -fexceptions
 #endif
 
 LOCAL_CPPFLAGS := -Wno-deprecated-declarations
+
 LOCAL_EXPORT_CFLAGS   := -DUSE_FILE32API
 LOCAL_EXPORT_CPPFLAGS := -Wno-deprecated-declarations
+
+#FIXME: added
+LOCAL_CFLAGS += -DCC_ENABLE_BOX2D_INTEGRATION=0 -DCC_USE_PHYSICS=0 -DCC_USE_3D_PHYSICS=0 -DCC_ENABLE_BULLET_INTEGRATION=0 -DCC_USE_NAVMESH=0 -DCC_USE_WEBP=0 -DCC_USE_TIFF=0 -DMY_USE_FREESERIF=1 -DMY_USE_UIBUTTON_SETTITLECOLOR=1 -DMY_USE_UNRARSRC=0 -DMY_USE_LIBBPG=0 -DMY_USE_LIBJXR=0 -DMY_USE_LIB7ZIP=0 -DMY_USE_PARTICLE3D=0
+LOCAL_CPPFLAGS += -DCC_ENABLE_BOX2D_INTEGRATION=0 -DCC_USE_PHYSICS=0 -DCC_USE_3D_PHYSICS=0 -DCC_ENABLE_BULLET_INTEGRATION=0 -DCC_USE_NAVMESH=0 -DCC_USE_WEBP=0 -DCC_USE_TIFF=0 -DMY_USE_FREESERIF=1 -DMY_USE_UIBUTTON_SETTITLECOLOR=1 -DMY_USE_UNRARSRC=0 -DMY_USE_LIBBPG=0 -DMY_USE_LIBJXR=0 -DMY_USE_LIB7ZIP=0 -DMY_USE_PARTICLE3D=0
+LOCAL_EXPORT_CFLAGS += -DCC_ENABLE_BOX2D_INTEGRATION=0 -DCC_USE_PHYSICS=0 -DCC_USE_3D_PHYSICS=0 -DCC_ENABLE_BULLET_INTEGRATION=0 -DCC_USE_NAVMESH=0 -DCC_USE_WEBP=0 -DCC_USE_TIFF=0 -DMY_USE_FREESERIF=1 -DMY_USE_UIBUTTON_SETTITLECOLOR=1 -DMY_USE_UNRARSRC=0 -DMY_USE_LIBBPG=0 -DMY_USE_LIBJXR=0 -DMY_USE_LIB7ZIP=0 -DMY_USE_PARTICLE3D=0
+LOCAL_EXPORT_CPPFLAGS += -DCC_ENABLE_BOX2D_INTEGRATION=0 -DCC_USE_PHYSICS=0 -DCC_USE_3D_PHYSICS=0 -DCC_ENABLE_BULLET_INTEGRATION=0 -DCC_USE_NAVMESH=0 -DCC_USE_WEBP=0 -DCC_USE_TIFF=0 -DMY_USE_FREESERIF=1 -DMY_USE_UIBUTTON_SETTITLECOLOR=1 -DMY_USE_UNRARSRC=0 -DMY_USE_LIBBPG=0 -DMY_USE_LIBJXR=0 -DMY_USE_LIB7ZIP=0 -DMY_USE_PARTICLE3D=0
 
 include $(BUILD_STATIC_LIBRARY)
 
@@ -309,34 +327,43 @@ LOCAL_MODULE_FILENAME := libcc
 LOCAL_STATIC_LIBRARIES := ccs
 LOCAL_STATIC_LIBRARIES += ccb
 LOCAL_STATIC_LIBRARIES += cc3d
-LOCAL_STATIC_LIBRARIES += ccnet
+#LOCAL_STATIC_LIBRARIES += ccnet
 LOCAL_STATIC_LIBRARIES += audio
-LOCAL_STATIC_LIBRARIES += spine
+#LOCAL_STATIC_LIBRARIES += spine
 
 include $(BUILD_STATIC_LIBRARY)
 #==============================================================
 $(call import-module,android/cpufeatures)
-$(call import-module,freetype2/prebuilt/android)
+#$(call import-module,freetype2/prebuilt/android)
+$(call import-module,freetype-2.5.0.1)
+
 $(call import-module,platform/android)
-$(call import-module,png/prebuilt/android)
-$(call import-module,zlib/prebuilt/android)
-$(call import-module,jpeg/prebuilt/android)
-$(call import-module,tiff/prebuilt/android)
-$(call import-module,webp/prebuilt/android)
-$(call import-module,chipmunk/prebuilt/android)
+
+#$(call import-module,png/prebuilt/android)
+$(call import-module,libpng-1.4.5)
+
+#$(call import-module,zlib/prebuilt/android)
+$(call import-module,zlib-1.2.5)
+
+#$(call import-module,jpeg/prebuilt/android)
+$(call import-module,jpeg-9)
+
+# $(call import-module,tiff/prebuilt/android)
+# $(call import-module,webp/prebuilt/android)
+# $(call import-module,chipmunk/prebuilt/android)
 $(call import-module,3d)
 $(call import-module,audio/android)
 $(call import-module,editor-support/cocosbuilder)
 $(call import-module,editor-support/cocostudio)
-$(call import-module,editor-support/spine)
-$(call import-module,network)
+# $(call import-module,editor-support/spine)
+#$(call import-module,network)
 $(call import-module,ui)
 $(call import-module,extensions)
-$(call import-module,Box2D/prebuilt/android)
-$(call import-module,bullet/prebuilt/android)
-$(call import-module,recast)
+# $(call import-module,Box2D/prebuilt/android)
+# $(call import-module,bullet/prebuilt/android)
+# $(call import-module,recast)
 # $(call import-module,curl/prebuilt/android)
-$(call import-module,websockets/prebuilt/android)
-$(call import-module,openssl/prebuilt/android)
+# $(call import-module,websockets/prebuilt/android)
+# $(call import-module,openssl/prebuilt/android)
 $(call import-module,flatbuffers)
-$(call import-module,uv/prebuilt/android)
+# $(call import-module,uv/prebuilt/android)

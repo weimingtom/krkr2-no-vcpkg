@@ -85,12 +85,20 @@ namespace TJS // following is in the namespace
             // decode each instructions
             switch(CodeArea[i]) {
                 case VM_NOP:
+#if !MY_USE_MINLIB				
                     msg.printf("nop");
+#else
+                    msg.printf("%s", "nop");
+#endif
                     size = 1;
                     break;
 
                 case VM_NF:
+#if !MY_USE_MINLIB				
                     msg.printf("nf");
+#else
+                    msg.printf("%s", "nf");
+#endif
                     size = 1;
                     break;
 
@@ -330,7 +338,11 @@ namespace TJS // following is in the namespace
                         st = 4;
                     tjs_int num = CodeArea[i + st - 1]; // st-1 = argument count
                     bool first = true;
+#if !MY_USE_MINLIB
                     ttstr buf{};
+#else
+					tjs_char buf[256];
+#endif
                     tjs_int c = 0;
                     if(num == -1) {
                         // omit arg
@@ -347,21 +359,35 @@ namespace TJS // following is in the namespace
                             first = false;
                             switch(CodeArea[i + st + j * 2]) {
                                 case fatNormal:
+#if !MY_USE_MINLIB								
                                     buf = { fmt::format(
                                         "%{}",
                                         TJS_FROM_VM_REG_ADDR(
                                             CodeArea[i + st + j * 2 + 1])) };
+#else
+						swprintf((wchar_t *)buf, sizeof(buf)/sizeof(tjs_char), L"%%%d",
+							TJS_FROM_VM_REG_ADDR(CodeArea[i+st+j*2+1]));
+#endif
 
                                     break;
                                 case fatExpand:
+#if !MY_USE_MINLIB
                                     buf = { fmt::format(
                                         "%{}*",
                                         TJS_FROM_VM_REG_ADDR(
                                             CodeArea[i + st + j * 2 + 1])) };
+#else
+						swprintf((wchar_t *)buf, sizeof(buf)/sizeof(tjs_char), L"%%%d*",
+							TJS_FROM_VM_REG_ADDR(CodeArea[i+st+j*2+1]));
+#endif
 
                                     break;
                                 case fatUnnamedExpand:
+#if !MY_USE_MINLIB
                                     buf = TJS_W("*");
+#else
+									wcscpy((wchar_t *)buf, L"*");
+#endif
                                     break;
                             }
                             msg += buf;
@@ -373,9 +399,14 @@ namespace TJS // following is in the namespace
                             if(!first)
                                 msg += TJS_W(", ");
                             first = false;
+#if !MY_USE_MINLIB							
                             buf = { fmt::format(
                                 "%{}",
                                 TJS_FROM_VM_REG_ADDR(CodeArea[i + c + st])) };
+#else
+							swprintf((wchar_t *)buf, sizeof(buf)/sizeof(tjs_char), L"%%%d",
+								TJS_FROM_VM_REG_ADDR(CodeArea[i+c+st]));
+#endif
                             c++;
                             msg += buf;
                         }
@@ -520,7 +551,11 @@ namespace TJS // following is in the namespace
 
                 case VM_RET:
                     // return
+#if !MY_USE_MINLIB					
                     msg.printf("ret");
+#else
+                    msg.printf("%s", "ret");
+#endif
                     size = 1;
                     break;
 
@@ -534,7 +569,11 @@ namespace TJS // following is in the namespace
 
                 case VM_EXTRY:
                     // exit from try-protected block
+#if !MY_USE_MINLIB					
                     msg.printf("extry");
+#else
+                    msg.printf("%s", "extry");
+#endif
                     size = 1;
                     break;
 
@@ -565,12 +604,20 @@ namespace TJS // following is in the namespace
                     break;
 
                 case VM_REGMEMBER:
+#if !MY_USE_MINLIB
                     msg.printf("regmember");
+#else
+                    msg.printf("%s", "regmember");
+#endif
                     size = 1;
                     break;
 
                 case VM_DEBUGGER:
+#if !MY_USE_MINLIB
                     msg.printf("debugger");
+#else
+                    msg.printf("%s", "debugger");
+#endif
                     size = 1;
                     break;
 
@@ -599,17 +646,33 @@ namespace TJS // following is in the namespace
                                             tjs_int addr,
                                             const tjs_int32 *codestart,
                                             tjs_int size, void *data) {
+#if !MY_USE_MINLIB
         ttstr buf{ fmt::format("{} {}", addr,
                                ttstr{ msg }.AsNarrowStdString()) };
+#else
+		tjs_int buflen = (tjs_int)(TJS_strlen(msg) + TJS_strlen(comment) + 20);
+		tjs_char *buf = new tjs_char[buflen];
+
+		swprintf((wchar_t *)buf, buflen, L"%08d %ls", addr, msg);
+#endif
 
         if(comment[0]) {
+#if !MY_USE_MINLIB
             buf = TJS_W("\t// ");
             buf = comment;
+#else
+			wcscat((wchar_t *)buf, L"\t// ");
+			wcscat((wchar_t *)buf, (const wchar_t *)comment);
+#endif
         }
 
         try {
             of_data *dat = (of_data *)(data);
+#if !MY_USE_MINLIB
             dat->func(buf.c_str(), dat->funcdata);
+#else
+			dat->func(buf, dat->funcdata);
+#endif
         } catch(...) {
             throw;
         }
@@ -618,6 +681,7 @@ namespace TJS // following is in the namespace
     void tTJSInterCodeContext::_output_func_src(const tjs_char *msg,
                                                 const tjs_char *name,
                                                 tjs_int line, void *data) {
+#if !MY_USE_MINLIB												
         ttstr buf{};
         auto c_name = ttstr{ name }.AsNarrowStdString();
         auto c_msg = ttstr{ msg }.AsNarrowStdString();
@@ -631,6 +695,24 @@ namespace TJS // following is in the namespace
         } catch(...) {
             throw;
         }
+#else
+		tjs_int buflen = (tjs_int)(TJS_strlen(msg) + TJS_strlen(name) + 20);
+		tjs_char *buf = new tjs_char[buflen];
+		if(line >= 0)
+			swprintf((wchar_t *)buf, buflen, L"#%ls(%d) %ls", name, line+1, msg);
+		else
+			swprintf((wchar_t *)buf, buflen, L"#%ls %ls", name, msg);
+		try
+		{
+			of_data *dat = (of_data *)(data);
+			dat->func(buf, dat->funcdata);
+		}
+		catch(...)
+		{
+			throw;
+		}
+		delete [] buf;
+#endif
     }
 
     //---------------------------------------------------------------------------

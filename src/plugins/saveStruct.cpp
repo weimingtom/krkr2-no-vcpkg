@@ -73,7 +73,14 @@ static void quoteOctet(tTJSVariantOctet *octet, tTVPStringStream *writer) {
     tjs_uint length = octet->GetLength();
     writer->write(TJS_W("<% "));
     for(tjs_uint i = 0; i < length; i++) {
+#if !MY_USE_MINLIB	
         writer->write(ttstr{ fmt::format("{:02x} ", data[i]) }.c_str());
+#else
+	    tjs_char buf[256];
+	    swprintf((wchar_t *)buf, 255, L"%02x ", data[i]);
+	    writer->write(buf);
+#endif
+
     }
     writer->write(TJS_W("%>"));
 }

@@ -14,6 +14,7 @@
 #include <vector>
 #include <stack>
 #include <list>
+#include <functional> //for std::funcion
 #include "tjsVariant.h"
 #include "tjsInterface.h"
 #include "tjsNamespace.h"

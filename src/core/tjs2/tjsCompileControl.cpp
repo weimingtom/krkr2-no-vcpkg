@@ -8,7 +8,9 @@
 //---------------------------------------------------------------------------
 // Conditional Compile Control
 //---------------------------------------------------------------------------
+#if !MY_USE_MINLIB
 #include <spdlog/spdlog.h>
+#endif
 #include "tjsCommHead.h"
 #include "tjsCompileControl.h"
 #include "tjsLex.h"
@@ -29,7 +31,11 @@ namespace TJSPP {
     }
 
     void parser::error(const std::string &msg) {
+#if !MY_USE_MINLIB	
         spdlog::get("tjs2")->critical(msg);
+#else
+		fprintf(stderr, "[tjs2] %s\n", msg.c_str());		
+#endif		
     }
     //---------------------------------------------------------------------------
     // TJS_iswspace

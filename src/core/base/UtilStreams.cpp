@@ -339,10 +339,12 @@ tjs_uint tTVPPartialStream::Write(const void *buffer, tjs_uint write_size) {
 tjs_uint64 tTVPPartialStream::GetSize() { return Size; }
 //---------------------------------------------------------------------------
 
+#if !MY_USE_MINLIB
 extern "C" {
 #include <archive.h>
 #include <archive_entry.h>
 }
+#endif
 #if 0
 class LibArchive_Archive : public tTVPArchive {
     struct archive *_arc;
@@ -478,6 +480,7 @@ public:
     void Start() { Cond.notify_all(); }
 };
 
+#if !MY_USE_MINLIB
 class tTVPUnpackArchiveImplLibArchive : public iTVPUnpackArchiveImpl {
     struct archive *ArcObj = nullptr;
     tTVPArchive *pTVPArc = nullptr;
@@ -706,6 +709,7 @@ tTVPUnpackArchiveImplLibArchive::_onPassphraseCallback(archive *,
         ((tTVPUnpackArchiveImplLibArchive *)clientdata)->onPassphraseCallback();
     return psw.c_str();
 }
+#endif
 
 //#if 1
 #if MY_USE_UNRARSRC
@@ -890,7 +894,12 @@ int tTVPUnpackArchive::Prepare(const std::string &path,
     } else
 #endif
     {
+#if !MY_USE_MINLIB	
         _impl = new tTVPUnpackArchiveImplLibArchive();
+#else
+        Close();
+        return -2;
+#endif		
     }
     _impl->SetCallback(this);
     if(!_impl->Open(path)) {

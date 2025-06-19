@@ -1302,8 +1302,15 @@ void tTJSNI_BaseLayer::DumpStructure(int level) {
         ttstr name = Name;
         if(name.IsEmpty())
             name = TJS_W("<noname>");
+#if !MY_USE_MINLIB			
         ttstr ptr{ fmt::format(" (object {})", static_cast<void *>(Owner)) };
         ttstr ptr2{ fmt::format(" (native {})", static_cast<void *>(this)) };
+#else
+		tjs_char ptr[80];
+		swprintf((wchar_t *)ptr, sizeof(ptr)/sizeof(tjs_char), L" (object 0x%p)", Owner);
+		tjs_char ptr2[80];
+		swprintf((wchar_t *)ptr2, sizeof(ptr2)/sizeof(tjs_char), L" (native 0x%p)", this);
+#endif
 
         TVPAddLog(ttstr(indent) + name + ttstr(ptr) + ttstr(ptr2) +
                   ttstr(TJS_W(" (")) + ttstr(Rect.left) + ttstr(TJS_W(",")) +

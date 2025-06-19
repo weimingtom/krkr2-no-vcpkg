@@ -230,7 +230,12 @@ namespace TJS {
             if(rec->Flags & TJS_OHMF_DELETING) {
                 // warn running code on deleting-in-progress object
                 ttstr warn(TJSWarning);
+#if !MY_USE_MINLIB				
                 ttstr tmp{ fmt::format("{}", static_cast<void *>(object)) };
+#else
+				tjs_char tmp[64];
+				swprintf((wchar_t *)tmp, sizeof(tmp)/sizeof(tjs_char), L"0x%p", object);
+#endif
 
                 ttstr info(TJSWarnRunningCodeOnDeletingObject);
                 info.Replace(TJS_W("%1"), tmp);
@@ -252,8 +257,14 @@ namespace TJS {
             // list all unfreed objects
             tHash::tIterator i;
             for(i = Hash.GetFirst(); !i.IsNull(); i++) {
+#if !MY_USE_MINLIB				
                 ttstr addr{ fmt::format("0x{:p}",
                                         static_cast<void *>(i.GetKey())) };
+#else
+				tjs_char addr[65];
+				swprintf((wchar_t *)addr, sizeof(addr)/sizeof(tjs_char), L"0x%p", i.GetKey());
+#endif
+
                 ttstr info = (const tjs_char *)TJSObjectWasNotFreed;
                 info.Replace(TJS_W("%1"), addr);
                 info.Replace(TJS_W("%2"), i.GetValue().Type);
@@ -279,9 +290,15 @@ namespace TJS {
                     if(i != items.begin() &&
                        (i == items.end() || history != i->History ||
                         type != i->Type)) {
+#if !MY_USE_MINLIB						
                         ttstr tmp{ fmt::format("{}", static_cast<int>(count)) };
                         ttstr info = (const tjs_char *)
                             TJSObjectCountingMessageGroupByObjectTypeAndHistory;
+#else
+						tjs_char tmp[64];
+						swprintf((wchar_t *)tmp, sizeof(tmp)/sizeof(tjs_char), L"%6d", (int)count);
+						ttstr info = (const tjs_char *)TJSObjectCountingMessageGroupByObjectTypeAndHistory;
+#endif
                         info.Replace(TJS_W("%1"), tmp);
                         info.Replace(TJS_W("%2"), type);
                         info.Replace(TJS_W("%3"), history);
@@ -311,7 +328,12 @@ namespace TJS {
                 for(auto i = items.begin();; i++) {
                     if(i != items.begin() &&
                        (i == items.end() || type != i->Type)) {
+#if !MY_USE_MINLIB					   
                         ttstr tmp{ fmt::format("{}", static_cast<int>(count)) };
+#else
+						tjs_char tmp[64];
+						swprintf((wchar_t *)tmp, sizeof(tmp)/sizeof(tjs_char), L"%6d", (int)count);
+#endif
                         ttstr info = (const tjs_char *)
                             TJSObjectCountingMessageTJSGroupByObjectType;
                         info.Replace(TJS_W("%1"), tmp);

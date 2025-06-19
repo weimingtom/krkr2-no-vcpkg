@@ -30,6 +30,17 @@
 #include "platform/CCPlatformConfig.h"
 #include "dirent.h"
 #include "TickCount.h"
+
+#if !MY_USE_MINLIB
+//skip
+#else
+#include <fcntl.h>
+#ifndef _MSC_VER
+#include <unistd.h> //read, close, lseek64, write
+#else
+#include <io.h>
+#endif
+#endif
 #include "combase.h"
 
 #include "win32io.h"
@@ -128,6 +139,10 @@ tTJSBinaryStream *tTVPFileMedia::Open(const ttstr &name, tjs_uint32 flags) {
 
 void TVPListDir(const std::string &folder,
                 std::function<void(const std::string &, int)> cb) {
+#if !MY_USE_MINLIB
+#else
+	fprintf(stderr, "%s\n", "==================>TVPListDir");
+#endif	
     DIR *dirp;
     dirent *direntp;
     tTVP_stat stat_buf;
@@ -403,11 +418,21 @@ ttstr TVPGetTemporaryName() {
 
     unsigned char buf[16];
     TVPGetRandomBits128(buf);
+#if !MY_USE_MINLIB	
     ttstr random{ fmt::format("{:02x}{:02x}{:02x}{:02x}{:02x}{:02x}", buf[0],
                               buf[1], buf[2], buf[3], buf[4], buf[5]) };
 
     return TVPTempPath + TJS_W("krkr_") + random + TJS_W("_") + ttstr(num) +
         TJS_W("_") + ttstr(TVPProcessID);
+#else
+	tjs_char random[128];
+	swprintf((wchar_t *)random, sizeof(random)/sizeof(tjs_char), L"%02x%02x%02x%02x%02x%02x",
+		buf[0], buf[1], buf[2], buf[3],
+		buf[4], buf[5]);
+
+    return TVPTempPath + TJS_W("krkr_") + ttstr(random) + TJS_W("_") + ttstr(num) +
+        TJS_W("_") + ttstr(TVPProcessID);
+#endif
 }
 //---------------------------------------------------------------------------
 

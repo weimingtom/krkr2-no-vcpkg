@@ -208,17 +208,31 @@ namespace TJS {
                         if((*p >= TJS_W('a') && *p <= TJS_W('f')) ||
                            (*p >= TJS_W('A') && *p <= TJS_W('F')) ||
                            (*p >= TJS_W('0') && *p <= TJS_W('9'))) {
+#if !MY_USE_MINLIB							
                             hexflag = true;
                             ret += { fmt::format("\\x{:02x}",
                                                  static_cast<int>(*p)) };
+#else
+							tjs_char buf[20];
+							swprintf((wchar_t *)buf, sizeof(buf)/sizeof(tjs_char), L"\\x%02x", (int)*p);
+							hexflag = true;
+							ret += buf;
+#endif
                             continue;
                         }
                     }
 
                     if(*p < 0x20) {
+#if !MY_USE_MINLIB
                         hexflag = true;
                         ret +=
                             { fmt::format("\\x{:02x}", static_cast<int>(*p)) };
+#else
+						tjs_char buf[20];
+						swprintf((wchar_t *)buf, sizeof(buf)/sizeof(tjs_char), L"\\x%02x", (int)*p);
+						hexflag = true;
+						ret += buf;
+#endif
                     } else {
                         ret += *p;
                         hexflag = false;

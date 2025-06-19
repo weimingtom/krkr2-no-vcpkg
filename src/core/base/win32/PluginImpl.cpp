@@ -450,10 +450,17 @@ extern std::set<ttstr> TVPRegisteredPlugins;
 
 void TVPLoadPlugin(const ttstr &name) {
     bool success = TVPLoadInternalPlugin(name);
+#if !MY_USE_MINLIB
     std::string msg = fmt::format("Loading Plugin: {} {}", name.AsStdString(),
                                   success ? "Success" : "Failed");
+#else
+	char msg[256];
+	snprintf(msg, 256, "Loading Plugin: %s %s", name.AsStdString().c_str(),
+                                  success ? "Success" : "Failed");
+#endif
     const tjs_char *out = TJS::tTJSString(msg).c_str();
     TJS::TVPConsoleLog(out);
+
 }
 
 //---------------------------------------------------------------------------

@@ -25,7 +25,9 @@
 #include "ConfigManager/LocaleConfigManager.h"
 #include "Platform.h"
 
+#if !MY_USE_MINLIB
 #include <fmt/format.h>
+#endif
 
 extern bool TVPStartupSuccess;
 
@@ -271,12 +273,22 @@ tTJSNC_System::tTJSNC_System() : inherited(TJS_W("System")) {
         uuid[6] &= 0x0f;
         uuid[6] |= 0x40; // override version
 
+#if !MY_USE_MINLIB
         ttstr buf{ fmt::format(
             "{:02x}{:02x}{:02x}{:02x}-{:02x}{:02x}-{:02x}{:02x}-{"
             ":02x}{:02x}-{:02x}{:02x}{:02x}{:02x}{:02x}{:02x}",
             uuid[0], uuid[1], uuid[2], uuid[3], uuid[4], uuid[5], uuid[6],
             uuid[7], uuid[8], uuid[9], uuid[10], uuid[11], uuid[12], uuid[13],
             uuid[14], uuid[15]) };
+#else
+	tjs_char buf[40];
+	swprintf((wchar_t *)buf, sizeof(buf)/sizeof(tjs_char),
+L"%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x",
+		uuid[ 0], uuid[ 1], uuid[ 2], uuid[ 3],
+		uuid[ 4], uuid[ 5], uuid[ 6], uuid[ 7],
+		uuid[ 8], uuid[ 9], uuid[10], uuid[11],
+		uuid[12], uuid[13], uuid[14], uuid[15]);
+#endif
 
         if(result)
             *result = tTJSVariant(buf);

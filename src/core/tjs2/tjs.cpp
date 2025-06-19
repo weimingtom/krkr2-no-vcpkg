@@ -13,7 +13,9 @@
 
 #include <map>
 #include <cassert>
+#if !MY_USE_MINLIB
 #include <fmt/printf.h>
+#endif
 #include "tjs.h"
 #include "tjsScriptBlock.h"
 #include "tjsArray.h"
@@ -347,21 +349,37 @@ namespace TJS {
 
     //---------------------------------------------------------------------------
     void tTJS::Dump(tjs_uint width) const {
+#if !MY_USE_MINLIB	
         ttstr version{ fmt::format("TJS version {}.{}.{} ({})", TJSVersionMajor,
                                    TJSVersionMinor, TJSVersionRelease,
                                    TJSCompiledDate) };
+#else
+	tjs_char version[100];
+	swprintf((wchar_t *)version, sizeof(version)/sizeof(tjs_char), L"TJS version %d.%d.%d (%s)", TJSVersionMajor,
+		TJSVersionMinor, TJSVersionRelease, TJSCompiledDate);
+#endif
         OutputToConsoleSeparator(TJS_W("#"), width);
         OutputToConsoleWithCentering(TJS_W("TJS Context Dump"), width);
         OutputToConsoleSeparator(TJS_W("#"), width);
+#if !MY_USE_MINLIB		
         OutputToConsole(version.c_str());
+#else
+        OutputToConsole(version);
+#endif
         OutputToConsole(TJS_W(""));
 
         if(!ScriptBlocks.empty()) {
             std::vector<tTJSScriptBlock *>::const_iterator i;
 
+#if !MY_USE_MINLIB
             ttstr buf{ fmt::format("Total {} script block(s)",
                                    ScriptBlocks.size()) };
             OutputToConsole(buf.c_str());
+#else
+			tjs_char buf[1024];
+			swprintf((wchar_t *)buf, sizeof(buf)/sizeof(tjs_char), L"Total %d script block(s)", ScriptBlocks.size());
+            OutputToConsole(buf);
+#endif
             OutputToConsole(TJS_W(""));
 
             tjs_uint totalcontexts = 0;
@@ -378,31 +396,51 @@ namespace TJS {
                 else
                     title = TJS_W("(no-named script block)");
 
+#if !MY_USE_MINLIB
                 ttstr ptr{ fmt::format(" {}", static_cast<void *>(*i)) };
+#else
+				tjs_char ptr[256];
+				swprintf((wchar_t *)ptr, sizeof(ptr)/sizeof(tjs_char), L" 0x%p", (*i));
+#endif
+
                 title += ptr;
 
                 OutputToConsole(title.c_str());
 
                 n = (*i)->GetContextCount();
                 totalcontexts += n;
+#if !MY_USE_MINLIB
                 buf = { fmt::format("\tCount of contexts      : {}", n) };
-
                 OutputToConsole(buf.c_str());
+#else
+				swprintf((wchar_t *)buf, sizeof(buf)/sizeof(tjs_char), L"\tCount of contexts      : %d", n);
+                OutputToConsole(buf);
+#endif
 
                 n = (*i)->GetTotalVMCodeSize();
                 totalcodesize += n;
+#if !MY_USE_MINLIB
                 buf = { fmt::format("\tVM code area size      : {} words", n) };
-
                 OutputToConsole(buf.c_str());
+#else
+				swprintf((wchar_t *)buf, sizeof(buf)/sizeof(tjs_char), L"\tVM code area size      : %d words", n);
+                OutputToConsole(buf);
+#endif
+
 
                 n = (*i)->GetTotalVMDataSize();
                 totaldatasize += n;
+#if !MY_USE_MINLIB
                 buf = { fmt::format("\tVM constant data count : {}", n) };
-
                 OutputToConsole(buf.c_str());
+#else
+				swprintf((wchar_t *)buf, sizeof(buf)/sizeof(tjs_char), L"\tVM constant data count : %d", n);
+                OutputToConsole(buf);
+#endif
 
                 OutputToConsole(TJS_W(""));
             }
+#if !MY_USE_MINLIB
             buf = { fmt::format("Total count of contexts      : {}",
                                 totalcontexts) };
             OutputToConsole(buf.c_str());
@@ -412,6 +450,14 @@ namespace TJS {
             buf = { fmt::format("Total VM constant data count : {}",
                                 totaldatasize) };
             OutputToConsole(buf.c_str());
+#else
+			swprintf((wchar_t *)buf, sizeof(buf)/sizeof(tjs_char), L"Total count of contexts      : %d", totalcontexts);
+			OutputToConsole(buf);
+			swprintf((wchar_t *)buf, sizeof(buf)/sizeof(tjs_char), L"Total VM code area size      : %d words", totalcodesize);
+			OutputToConsole(buf);
+			swprintf((wchar_t *)buf, sizeof(buf)/sizeof(tjs_char), L"Total VM constant data count : %d", totaldatasize);
+			OutputToConsole(buf);
+#endif
 
             OutputToConsole(TJS_W(""));
 
@@ -426,7 +472,13 @@ namespace TJS {
                 else
                     title = TJS_W("(no-named script block)");
 
+#if !MY_USE_MINLIB
                 ttstr ptr{ fmt::format(" {}", static_cast<void *>(*i)) };
+#else
+				tjs_char ptr[256];
+				swprintf((wchar_t *)ptr, sizeof(ptr)/sizeof(tjs_char), L" 0x%p", (*i));
+#endif
+
                 title += ptr;
 
                 OutputToConsoleWithCentering(title.c_str(), width);

@@ -13,8 +13,10 @@
 #include <ioapi.h>
 #include <minizip/zip.h>
 #else
+#if !MY_USE_MINLIB
 #include "minizip/ioapi.h"
 #include "minizip/zip.h"
+#endif
 #endif
 #include <sstream>
 #include <iomanip>

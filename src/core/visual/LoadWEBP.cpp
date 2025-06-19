@@ -1,3 +1,4 @@
+#if !MY_USE_MINLIB
 #include "tjsCommHead.h"
 #include "GraphicsLoaderIntf.h"
 #include "MsgIntf.h"
@@ -99,3 +100,4 @@ void TVPLoadHeaderWEBP(void *formatdata, tTJSBinaryStream *src,
     val = tTJSVariant(config.input.has_alpha ? 32 : 24);
     (*dic)->PropSet(TJS_MEMBERENSURE, TJS_W("bpp"), 0, &val, (*dic));
 }
+#endif

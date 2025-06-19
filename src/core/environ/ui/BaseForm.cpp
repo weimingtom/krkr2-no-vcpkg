@@ -11,7 +11,9 @@
 #include "Platform.h"
 #include "cocostudio/ActionTimeline/CCActionTimeline.h"
 #include "extensions/GUI/CCScrollView/CCTableView.h"
+#if !MY_USE_MINLIB
 #include <fmt/format.h>
+#endif
 
 using namespace cocos2d;
 using namespace cocos2d::ui;
@@ -30,9 +32,17 @@ cocos2d::Node *NodeMap::findController<cocos2d::Node>(const std::string &name,
     if(it != this->end())
         return it->second;
     if(notice) {
+#if !MY_USE_MINLIB
         TVPShowSimpleMessageBox(
             fmt::format("Node {} not exist in {}", name, FileName),
             "Fail to load ui");
+#else
+		std::string warntext("Node ");
+		warntext += name.c_str();
+		warntext += " not exist in ";
+		warntext += FileName;
+		TVPShowSimpleMessageBox(warntext, "Fail to load ui");
+#endif
     }
     return nullptr;
 }
@@ -48,9 +58,17 @@ void NodeMap::initFromNode(cocos2d::Node *node) {
 }
 
 void NodeMap::onLoadError(const std::string &name) const {
+#if !MY_USE_MINLIB
     TVPShowSimpleMessageBox(
         fmt::format("Node {} wrong controller type in {}", name, FileName),
         "Fail to load ui");
+#else
+	std::string warntext("Node ");
+	warntext += name.c_str();
+	warntext += " wrong controller type in ";
+	warntext += FileName;
+	TVPShowSimpleMessageBox(warntext, "Fail to load ui");
+#endif
 }
 
 Node *CSBReader::Load(const char *filename) {

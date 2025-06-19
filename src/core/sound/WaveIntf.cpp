@@ -714,15 +714,19 @@ struct tTVPWaveDecoderManager {
     VorbisWaveDecoderCreator vorbisWaveDecoderCreator;
 #if MY_USE_FFMPEG    
     FFWaveDecoderCreator ffWaveDecoderCreator;
-#endif    
+#endif
+#if !MY_USE_MINLIB
     OpusWaveDecoderCreator opusWaveDecoderCreator;
+#endif
 
     tTVPWaveDecoderManager() {
         TVPWaveDecoderManagerAvail = true;
 #if MY_USE_FFMPEG        
         TVPRegisterWaveDecoderCreator(&ffWaveDecoderCreator);
 #endif
+#if !MY_USE_MINLIB
         TVPRegisterWaveDecoderCreator(&opusWaveDecoderCreator);
+#endif
         TVPRegisterWaveDecoderCreator(&RIFFWaveDecoderCreator);
         TVPRegisterWaveDecoderCreator(&vorbisWaveDecoderCreator);
     }

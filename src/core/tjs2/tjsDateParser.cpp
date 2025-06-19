@@ -11,7 +11,9 @@
 #include "tjsCommHead.h"
 
 #include <ctime>
+#if !MY_USE_MINLIB
 #include <spdlog/spdlog.h>
+#endif
 #include "tjsDateParser.h"
 
 #include "tjsError.h"
@@ -26,7 +28,11 @@ namespace TJSDate {
     }
 
     void parser::error(const std::string &msg) {
+#if !MY_USE_MINLIB	
         spdlog::get("tjs2")->critical(msg);
+#else
+		fprintf(stderr, "[tjs2] %s\n", msg.c_str());
+#endif		
     }
     //---------------------------------------------------------------------------
     // Character component classifications

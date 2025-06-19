@@ -13,8 +13,10 @@
 #include <clocale>
 
 #include <cassert>
+#if !MY_USE_MINLIB
 #include <boost/locale.hpp>
 #include <spdlog/spdlog.h>
+#endif
 
 #ifdef _WIN32
 #include <float.h>
@@ -867,9 +869,18 @@ namespace TJS {
     }
 
     tTJSFuncTrace::tTJSFuncTrace(const tjs_char *p) :
+#if !MY_USE_MINLIB	
         funcname(boost::locale::conv::utf_to_utf<char>(p)) {
         spdlog::debug("enter: {}", funcname);
+#else
+        funcname((const char *)p) {
+		fprintf(stderr, "!!!not implement!!! [enter] %s", funcname.c_str());
+#endif		
     }
 
+#if !MY_USE_MINLIB	
     tTJSFuncTrace::~tTJSFuncTrace() { spdlog::debug("exit: {}", funcname); }
+#else
+	tTJSFuncTrace::~tTJSFuncTrace() { fprintf(stderr, "exit: %s", funcname.c_str()); }
+#endif		
 } // namespace TJS

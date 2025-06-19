@@ -181,7 +181,13 @@ namespace TJS {
         if(Name) {
             name = Name;
         } else {
+#if !MY_USE_MINLIB
             ttstr ptr{ fmt::format("0x{:p}", static_cast<const void *>(this)) };
+#else
+			tjs_char ptr[128];
+			swprintf((wchar_t *)ptr, sizeof(ptr)/sizeof(tjs_char), L"0x%p", this);
+#endif
+
             name = ttstr(TJS_W("anonymous@")) + ptr;
         }
 
@@ -469,7 +475,13 @@ namespace TJS {
         auto i = InterCodeContextList.begin();
         while(i != InterCodeContextList.end()) {
             ConsoleOutput(TJS_W(""), (void *)this);
+#if !MY_USE_MINLIB
             ttstr ptr{ fmt::format(" {}", static_cast<void *>((*i))) };
+#else
+			tjs_char ptr[256];
+			swprintf((wchar_t*)ptr, sizeof(ptr)/sizeof(tjs_char), L" 0x%p", (*i));
+#endif
+
             ConsoleOutput((ttstr(TJS_W("(")) +
                            ttstr((*i)->GetContextTypeName()) + TJS_W(") ") +
                            ttstr((*i)->GetName()) + ptr)
@@ -494,7 +506,12 @@ namespace TJS {
         auto i = InterCodeContextList.begin();
         while(i != InterCodeContextList.end()) {
             output.Print(TJS_W(""));
+#if !MY_USE_MINLIB			
             ttstr ptr{ fmt::format(" {}", static_cast<void *>((*i))) };
+#else
+			tjs_char ptr[256];
+			swprintf((wchar_t*)ptr, sizeof(ptr)/sizeof(tjs_char), L" 0x%p", (*i));
+#endif			
             output.Print((ttstr(TJS_W("(")) +
                           ttstr((*i)->GetContextTypeName()) + TJS_W(") ") +
                           ttstr((*i)->GetName()) + ptr)

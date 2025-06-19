@@ -21,14 +21,21 @@ extern "C" {
 #include "libswscale/swscale.h"
 #endif
 };
+#if !MY_USE_MINLIB
 #include "opencv2/opencv.hpp"
+#else
+#include "opencv2/core.hpp"
+#include "opencv2/imgproc.hpp"
+#endif
 #include "Application.h"
 #include "Platform.h"
 #include "ConfigManager/IndividualConfigManager.h"
 #include "xxhash/xxhash.h"
 #include "tjsHashSearch.h"
 #include "EventIntf.h"
+#if !MY_USE_MINLIB
 #include "lz4.h"
+#endif
 
 // #define USE_SWSCALE
 #define USE_CV_AFFINE
@@ -485,7 +492,7 @@ public:
         return origTex;
     }
 };
-
+#if !MY_USE_MINLIB
 class tTVPSoftwareTexture2D_half : public tTVPSoftwareTexture2D_compress {
     std::vector<const tjs_uint8 *> _scanline;
     std::vector<tjs_uint8 *> _scanlineData;
@@ -820,6 +827,7 @@ public:
         return blk.Height;
     }
 };
+#endif
 
 class tTVPSoftwareTexture2D : public tTVPSoftwareTexture2D_static {
     tTVPSoftwareTexture2D(tTVPBitmap *bmp) :
@@ -2925,6 +2933,7 @@ public:
         StretchType(stNearest), tempTexture(nullptr), img_convert_ctx(nullptr),
         _drawCount(0) {
         _createStaticTexture2D = tTVPSoftwareTexture2D::Create;
+#if !MY_USE_MINLIB		
         std::string compTexMethod =
             IndividualConfigManager::GetInstance()->GetValue<std::string>(
                 "software_compress_tex", "none");
@@ -2934,6 +2943,13 @@ public:
             _createStaticTexture2D = tTVPSoftwareTexture2D_lz4::Create;
         else if(compTexMethod == "lz4+tlg5")
             _createStaticTexture2D = tTVPSoftwareTexture2D_lz4_tlg5::Create;
+#else
+#if defined(_MSC_VER)
+		OutputDebugStringA("====================> _createStaticTexture2D not set \n");
+#else
+		CCLOG("====================> _createStaticTexture2D not set ");
+#endif
+#endif
 
         Register_1();
         Register_2();

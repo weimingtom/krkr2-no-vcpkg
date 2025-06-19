@@ -14,7 +14,9 @@
 #include "tjsError.h"
 #include "tjs.h"
 
+#if !MY_USE_MINLIB
 #include <spdlog/spdlog.h>
+#endif
 
 #define TJS_MAX_TRACE_TEXT_LEN 1500
 
@@ -164,7 +166,11 @@ namespace TJS {
 
     //---------------------------------------------------------------------------
     void TJS_eTJSError(const ttstr &msg) {
+#if !MY_USE_MINLIB	
         spdlog::get("tjs2")->error(msg.toString());
+#else
+		fprintf(stderr, "[tjs2] %s\n", msg.toString().c_str());
+#endif
         throw eTJSError(msg);
     }
 
@@ -286,8 +292,14 @@ namespace TJS {
             default:
                 if(TJS_FAILED(hr)) {
                     // FIXME:
+#if !MY_USE_MINLIB
                     TJS_eTJSError(fmt::sprintf(
                         ttstr{ TJSUnknownFailure }.AsNarrowStdString(), hr));
+#else
+					tjs_char buf[256];
+					swprintf((wchar_t *)buf, 256, (const wchar_t *)ttstr{ TJSUnknownFailure }.toWString().c_str(), hr);
+					TJS_eTJSError(buf);
+#endif
                 }
         }
     }

@@ -188,12 +188,24 @@ namespace TJS {
         if(TJSObjectTypeInfoEnabled()) {
             // retrieve object type information from debugging
             // facility
+#if !MY_USE_MINLIB
             ttstr ret{ fmt::format("(object {}",
                                    static_cast<void *>(dsp.Object)) };
+#else
+			tjs_char tmp[256];
+			swprintf((wchar_t *)tmp, sizeof(tmp)/sizeof(tjs_char), L"(object %p", dsp.Object);
+			ttstr ret = tmp;
+#endif
             ttstr type = TJSGetObjectTypeInfo(dsp.Object);
             if(!type.IsEmpty())
                 ret += TJS_W("[") + type + TJS_W("]");
+#if !MY_USE_MINLIB
             ret += { fmt::format(":{}", static_cast<void *>(dsp.ObjThis)) };
+#else
+			swprintf((wchar_t *)tmp, sizeof(tmp)/sizeof(tjs_char), L":%p", dsp.ObjThis);
+			ret += tmp;
+#endif
+
             type = TJSGetObjectTypeInfo(dsp.ObjThis);
             if(!type.IsEmpty())
                 ret += TJS_W("[") + type + TJS_W("]");
@@ -244,8 +256,21 @@ namespace TJS {
             return v;
         // FIXME:
         TJSSetFPUE();
+#if !MY_USE_MINLIB
         return TJSAllocVariantString(
             ttstr{ fmt::format("{:.15g}", r) }.c_str());
+#else
+		tjs_char tmp[128];
+		swprintf((wchar_t *)tmp, sizeof(tmp)/sizeof(tjs_char), L"%.15lg", r);
+	    tjs_char ttmp[64];
+	    // fast convert from ascii-only string
+	    for(int i = 0; i < sizeof(tmp); ++i) {
+	        int c = tmp[i];
+	        ttmp[i] = c;
+	        if(!c) break;
+		}
+		return TJSAllocVariantString(ttmp);
+#endif
     }
 
     //---------------------------------------------------------------------------
@@ -285,7 +310,12 @@ namespace TJS {
         // TJS_sprintf(p, TJS_W("%d"), exp);
         // TJS_snprintf(p, (sizeof(tmp)-(p-tmp))/sizeof(tjs_char),
         // TJS_W("%d"), exp);
+#if !MY_USE_MINLIB
         ttstr t2{ fmt::format("{}", exp) };
+#else
+		tjs_char t2[128];
+		swprintf( (wchar_t *)t2, 128, L"%d", exp);
+#endif
         for(tjs_int i = 0; t2[i] != 0 && p != (tmp + 128); i++) {
             *(p++) = t2[i];
         }
