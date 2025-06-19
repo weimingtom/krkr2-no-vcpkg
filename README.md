@@ -7,6 +7,7 @@
 ## TODO
 * Port to msys2
 * Linux build not tested
+* Some code is changed to mine (see readme_android.txt, like core/environ/android/AndroidUtils.cpp), not original code, need to be synchronized  
 
 ## Recommended Development Environment for good audio music output 
 * Xubuntu 20.04 desktop amd64, in VMWare or VirtualBox  
