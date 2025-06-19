@@ -38,3 +38,14 @@
 * $ sudo apt install libglew-dev libfreetype-dev libglfw3-dev libsdl2-dev libvorbis-dev libwebp-dev  libboost-locale-dev libfmt-dev libopencv-dev liblz4-dev libspdlog-dev libopenal-dev libgtk2.0-dev libarchive-dev libopusfile-dev libminizip-dev libjpeg-dev
 * $ make clean && make -j4 && make test
 * $ mkdir build && cd build && cmake .. && make -j4 && ./bin/krkr2/krkr2 && cd ..
+
+## Fro Android NDK r25, armeabi-v7a, in Android 32bit
+* Double click console.bat
+* set PATH=D:\home\soft\android_studio_sdk\ndk\25.2.9519653;%PATH%
+* set NDK_MODULE_PATH=%CD%\cocos;%CD%\external;%CD%\extensions;%CD%
+* ndk-build -j8
+* copy libs\armeabi-v7a\libSDL2.so project\androidstudio\app\libs\armeabi-v7a\libSDL2.so
+* copy libs\armeabi-v7a\libcpp_empty_test.so project\androidstudio\app\libs\armeabi-v7a\libcpp_empty_test.so
+* Open project\androidstudio with Android Studio
+
+
