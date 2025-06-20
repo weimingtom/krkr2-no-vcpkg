@@ -2,12 +2,14 @@
 [WIP and not recommended] build krkr2 kirikiroid2 vcpkg version without vcpkg, with apt install instead
 
 ## Bugs
-* Android: Exit/Save will cause loop and no response
+* Android: Exit/Save will cause loop and no response, krkr2-no-vcpkg_v19_android_exit_save_loop.7z  
 
 ## TODO
-* Port to msys2
+* Port to msys2, cocos2d-x-2.2.6_msys_v1.7z, cocos2d-x-2.2.6_mingw.7z
 * Linux build not tested
-* Some code is changed to mine (see readme_android.txt, like core/environ/android/AndroidUtils.cpp), not original code, need to be synchronized  
+* Some code is changed to mine (see readme_android.txt, like core/environ/android/AndroidUtils.cpp and core/sound/win32/WaveMixer.cpp), not original code, need to be synchronized  
+* https://github.com/weimingtom/krkr2-no-vcpkg/blob/master/src/core/environ/android/AndroidUtils.cpp  
+* https://github.com/weimingtom/krkr2-no-vcpkg/blob/master/src/core/sound/win32/WaveMixer.cpp  
 
 ## Recommended Development Environment for good audio music output 
 * Xubuntu 20.04 desktop amd64, in VMWare or VirtualBox  
