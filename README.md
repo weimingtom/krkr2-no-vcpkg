@@ -50,7 +50,7 @@
 * $ make clean && make -j4 && make test
 * $ mkdir build && cd build && cmake .. && make -j4 && ./bin/krkr2/krkr2 && cd ..
 
-## Fro Android NDK r25, armeabi-v7a, in Android 32bit
+## For Android NDK r25, armeabi-v7a, in Android 32bit
 * Double click console.bat
 * set PATH=D:\home\soft\android_studio_sdk\ndk\25.2.9519653;%PATH%
 * set NDK_MODULE_PATH=%CD%\cocos;%CD%\external;%CD%\extensions;%CD%
