@@ -21,7 +21,7 @@ extern "C" {
 #include "libswscale/swscale.h"
 #endif
 };
-#if !MY_USE_MINLIB
+#if !MY_USE_MINLIB && !defined(__MINGW32__)
 #include "opencv2/opencv.hpp"
 #else
 #include "opencv2/core.hpp"

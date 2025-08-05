@@ -6,7 +6,7 @@
 #include <malloc.h> // _aligned_malloc and _aligned_free
 #include <memory> // std::allocator
 
-#if defined(_M_IX86) || defined(_M_X64)
+#if (defined(_M_IX86) || defined(_M_X64)) && !defined(__MINGW32__)
 
 #include <intrin.h>
 
@@ -34,6 +34,9 @@ struct aligned_allocator : public std::allocator<T> {
 };
 #else
 #include <cstdlib> // for posix_memalign, free
+#if defined(__MINGW32__)	
+#include <malloc.h> //memalign, _aligned_malloc
+#endif
 
 // STL allocator
 template <class T, int TAlign = 16>
@@ -56,9 +59,15 @@ struct aligned_allocator : public std::allocator<T> {
     // allocate
     T *allocate(std::size_t c, const void *hint = 0) {
         void *ptr = nullptr;
+#if !defined(__MINGW32__)		
         if(posix_memalign(&ptr, TAlign, sizeof(T) * c)) {
             throw std::bad_alloc();
         }
+#else
+        if(0 == (ptr = _aligned_malloc(TAlign, sizeof(T) * c))) {
+            throw std::bad_alloc();
+        }	
+#endif
         return static_cast<T *>(ptr);
     }
 

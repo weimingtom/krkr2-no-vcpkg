@@ -46,7 +46,7 @@ extern const IID IID_ITSSWaveDecoder = { 0x313864E2,
                                          0x496F,
                                          { 0x8A, 0x6D, 0x43, 0x46, 0x5C, 0x10,
                                            0x5B, 0x58 } };
-#ifndef _WIN32
+#if !defined(_WIN32) || defined(__MINGW32__)
 //FIXME:added IID_IUnknown
 extern const IID IID_IUnknown = {0,0,0,{0, 0xc0, 0, 0, 0,
     0x46}};//00000000-0000-0000-C000-000000000046

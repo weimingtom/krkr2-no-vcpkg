@@ -59,7 +59,11 @@ namespace experimental{
                 PAUSED,
                 STOPPED,
                 COMPLETED,
+#if defined(__MINGW32__)				
+                ERROR_
+#else
                 ERROR
+#endif
             };
             
             /**

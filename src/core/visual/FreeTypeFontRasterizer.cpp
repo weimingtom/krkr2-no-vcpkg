@@ -10,6 +10,10 @@
 #include "FontSystem.h"
 #include <complex>
 
+#if defined(__MINGW32__)
+#define M_PI 3.14159265358979323846
+#endif 
+
 extern void TVPUninitializeFreeFont();
 extern FontSystem *TVPFontSystem;
 extern const ttstr &TVPGetDefaultFontName();

@@ -316,6 +316,7 @@ void Renderer::setupVBOAndVAO()
 
 void Renderer::setupVBO()
 {
+//printf("glGenBuffers == %p\n", glGenBuffers); // __glewGenBuffers, need call glewInit	
     glGenBuffers(2, &_buffersVBO[0]);
     // Issue #15652
     // Should not initialize VBO with a large size (VBO_SIZE=65536),

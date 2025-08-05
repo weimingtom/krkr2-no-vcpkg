@@ -11,7 +11,11 @@ class BasicAllocator : public iTVPMemoryAllocator {
 public:
     BasicAllocator() { TVPAddLog(TJS_W("(info) Use malloc for Bitmap")); }
     void *allocate(size_t size) { return malloc(size); }
+#if !defined(__MINGW32__)	
     void free(void *mem) { ::free(mem); }
+#else
+    void free_(void *mem) { ::free(mem); }	
+#endif
 };
 #if 0
 class GlobalAllocAllocator : public iTVPMemoryAllocator
@@ -195,7 +199,10 @@ void tTVPBitmapBitsAlloc::Free(void *ptr) {
         if(~(*(tjs_uint32 *)(bptr + record->size)) != record->sentinel_backup2)
             TVPThrowExceptionMessage(
                 TVPLayerBitmapBufferOverrunDetectedCheckYourDrawingCode);
-
+#if !defined(__MINGW32__)
         Allocator->free(record->alloc_ptr);
-    }
+#else
+        Allocator->free_(record->alloc_ptr);
+#endif
+	}
 }

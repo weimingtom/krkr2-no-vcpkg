@@ -146,9 +146,11 @@ void TVPListDir(const std::string &folder,
     DIR *dirp;
     dirent *direntp;
     tTVP_stat stat_buf;
-    if((dirp = opendir(folder.c_str()))) {
+printf("==================>TVPListDir,opendir>>>> %s\n", folder.c_str());	
+    if((dirp = opendir((folder + "\\").c_str()))) {
         while((direntp = readdir(dirp)) != nullptr) {
             std::string fullpath = folder + "/" + direntp->d_name;
+printf("==================>TVPListDir,while, %s, %s\n", fullpath.c_str(), folder.c_str());			
             if(!TVP_stat(fullpath.c_str(), stat_buf))
                 continue;
             cb(direntp->d_name, stat_buf.st_mode);

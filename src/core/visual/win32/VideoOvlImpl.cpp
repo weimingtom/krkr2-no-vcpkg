@@ -25,7 +25,9 @@
 // #include <evcode.h>
 
 #include "Application.h"
+#if !defined(__MINGW32__)
 #include "combase.h"
+#endif
 
 extern void GetVideoOverlayObject(tTJSNI_VideoOverlay *callbackwin,
                                   struct IStream *stream,
@@ -230,13 +232,17 @@ void tTJSNI_VideoOverlay::Open(const ttstr &_name) {
             VideoOverlay->SetVideoBuffer(Bitmap[0], Bitmap[1], size);
         }
     } catch(...) {
+#if !defined(__MINGW32__)		
         if(istream)
             istream->Release();
+#endif
         Close();
         throw;
     }
+#if !defined(__MINGW32__)
     if(istream)
         istream->Release();
+#endif
 
     // set Status
     ClearWndProcMessages();

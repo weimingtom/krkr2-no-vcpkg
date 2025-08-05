@@ -30,7 +30,7 @@
 #define TJS_METHOD_RET_EMPTY
 #define TJS_METHOD_RET(type)
 
-#if defined(_WIN32)
+#if defined(_WIN32) && !defined(__MINGW32__)
 
 typedef __int8 tjs_int8;
 typedef unsigned __int8 tjs_uint8;

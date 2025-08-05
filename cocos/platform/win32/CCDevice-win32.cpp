@@ -176,7 +176,7 @@ public:
                 wchar_t * pwszBuffer = utf8ToUtf16(fontPath);
                 if (pwszBuffer)
                 {
-                    if (AddFontResource(pwszBuffer))
+                    if (AddFontResourceW(pwszBuffer))
                     {
                         PostMessage(_wnd, WM_FONTCHANGE, 0, 0);
                     }
@@ -433,7 +433,7 @@ private:
             wchar_t * pwszBuffer = utf8ToUtf16(_curFontPath);
             if (pwszBuffer)
             {
-                RemoveFontResource(pwszBuffer);
+                RemoveFontResourceW(pwszBuffer);
                 PostMessage(_wnd, WM_FONTCHANGE, 0, 0);
                 delete[] pwszBuffer;
                 pwszBuffer = nullptr;

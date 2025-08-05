@@ -118,6 +118,7 @@ static const std::string str_select("select_check");
 static const std::string str_filename("filename");
 
 void TVPBaseFileSelectorForm::ListDir(std::string path) {
+printf("TVPBaseFileSelectorForm::ListDir(\"%s\");\n", path.c_str());	
     std::pair<std::string, std::string> split_path = PathSplit(path);
     ParentPath = split_path.first;
     if(_title) {
@@ -148,7 +149,9 @@ void TVPBaseFileSelectorForm::ListDir(std::string path) {
 
     CurrentDirList.clear();
     CurrentDirList.reserve(16);
+printf("TVPListDir, begin===\n");	
     TVPListDir(path, [&](const std::string &name, int mask) {
+printf("TVPListDir, %s\n", name.c_str());		
         if(mask & (S_IFREG | S_IFDIR)) {
             if(name.empty() || name.front() == '.')
                 return;
@@ -358,10 +361,16 @@ void TVPBaseFileSelectorForm::onTitleClicked(cocos2d::Ref *owner) {
         Button *item = dynamic_cast<Button *>(reader.findController("item"));
         item->setCallbackName(path);
         item->setTitleText(path);
+#if defined(__MINGW32__)
+printf("TVPBaseFileSelectorForm::onTitleClicked, FileSelectorForm.cpp path == %s\n", path.c_str());
+#endif
         item->addClickEventListener(func);
         cells.emplace_back(cell);
         buttons.emplace_back(item);
     }
+#if defined(__MINGW32__)
+printf("TVPBaseFileSelectorForm::onTitleClicked, FileSelectorForm.cpp end\n");
+#endif	
     _listform = TVPListForm::create(cells);
     _listform->show();
     // march all button's text in its width

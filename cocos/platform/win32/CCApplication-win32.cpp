@@ -271,7 +271,7 @@ std::string Application::getVersion()
         
         if (GetFileVersionInfo(szVersionFile, verHandle, verSize, verData))
         {
-            if (VerQueryValue(verData, L"\\", (VOID FAR* FAR*)&lpBuffer, &size))
+            if (VerQueryValueW(verData, L"\\", (VOID FAR* FAR*)&lpBuffer, &size))
             {
                 if (size)
                 {
@@ -363,7 +363,7 @@ static void PVRFrameEnableControlWindow(bool bEnable)
         && 0 != wcscmp(wszNewData, wszOldData)))    // but new data and old data not equal
     {
         dwSize = sizeof(WCHAR) * (wcslen(wszNewData) + 1);
-        RegSetValueEx(hKey, wszValue, 0, REG_SZ, (const BYTE *)wszNewData, dwSize);
+        RegSetValueExW(hKey, wszValue, 0, REG_SZ, (const BYTE *)wszNewData, dwSize);
     }
 
     RegCloseKey(hKey);

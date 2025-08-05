@@ -13,6 +13,9 @@
 #include "RenderManager.h"
 #include <sys/utime.h>
 #include <boost/locale.hpp>
+#if !MY_USE_MINLIB
+#include <spdlog/spdlog.h>
+#endif
 
 #pragma comment(lib, "psapi.lib")
 
@@ -75,7 +78,11 @@ extern "C" int usleep(unsigned long us) {
 std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
 std::string TVPGetDefaultFileDir() {
     wchar_t buf[MAX_PATH];
+#if !defined(__MINGW32__)	
     _wgetcwd(buf, sizeof(buf) / sizeof(buf[0]));
+#else
+    GetCurrentDirectoryW(sizeof(buf) / sizeof(buf[0]), buf);
+#endif
     wchar_t *p = buf;
     while(*p) {
         if(*p == '\\')
@@ -177,13 +184,15 @@ extern "C" int TVPShowSimpleMessageBox(const char *pszText,
 
 std::vector<std::string> TVPGetDriverPath() {
     std::vector<std::string> ret;
-    char drv[4] = { 'C', ':', '/', 0 };
-    for(char c = 'C'; c <= 'Z'; ++c) {
+printf("TVPGetDriverPath: begin\n");
+    char drv[4] = { 'C',/*'C',*/ ':', '/', 0 };
+    for(char c = 'C'/*'C'*/; c <= 'Z'; ++c) {
         drv[0] = c;
         switch(GetDriveTypeA(drv)) {
             case DRIVE_REMOVABLE:
             case DRIVE_FIXED:
             case DRIVE_REMOTE:
+printf("TVPGetDriverPath: %s\n", drv);
                 ret.emplace_back(drv);
                 break;
         }
@@ -332,7 +341,15 @@ void TVPPrintLog(const char *str) { printf("%s", str); }
 
 bool TVP_stat(const tjs_char *name, tTVP_stat &s) {
     struct _stat64 t;
-    bool ret = !_wstat64(ttstr{ name }.toWString().c_str(), &t);
+	ttstr wstr{ name };
+	wstr.Replace(ttstr{"/"}, ttstr{"\\"});
+    bool ret = !_wstat64(wstr.toWString().c_str(), &t);
+#if defined(__MINGW32__)	
+	if (!ret) {
+printf("TVP_stat failed, %s\n", ttstr{ name }.toString().c_str());
+		perror( "_wstat64 Problem getting information" );
+	}
+#endif	
     s.st_mode = t.st_mode;
     s.st_size = t.st_size;
     s.st_atime = t.st_atime;

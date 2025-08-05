@@ -81,6 +81,7 @@ static void _checkPath()
         int nNum = WideCharToMultiByte(CP_UTF8, 0, pUtf16ExePath, pUtf16DirEnd-pUtf16ExePath+1, utf8ExeDir, sizeof(utf8ExeDir), nullptr, nullptr);
 
         s_resourcePath = convertPathFormatToUnixStyle(utf8ExeDir);
+//printf("s_resourcePath: %s\n", s_resourcePath.c_str());			
     }
 }
 
@@ -345,7 +346,7 @@ string FileUtilsWin32::getWritablePath() const
         WCHAR app_data_path[CC_MAX_PATH + 1];
 
         // Get local app data directory, e.g. C:\Documents and Settings\username\Local Settings\Application Data
-        if (SUCCEEDED(SHGetFolderPath(nullptr, CSIDL_LOCAL_APPDATA, nullptr, SHGFP_TYPE_CURRENT, app_data_path)))
+        if (SUCCEEDED(SHGetFolderPathW(nullptr, CSIDL_LOCAL_APPDATA, nullptr, SHGFP_TYPE_CURRENT, app_data_path)))
         {
             wstring ret(app_data_path);
 
@@ -358,7 +359,7 @@ string FileUtilsWin32::getWritablePath() const
             ret += L"\\";
 
             // Create directory
-            if (SUCCEEDED(SHCreateDirectoryEx(nullptr, ret.c_str(), nullptr)))
+            if (SUCCEEDED(SHCreateDirectoryExW(nullptr, ret.c_str(), nullptr)))
             {
                 retPath = ret;
             }
@@ -387,13 +388,13 @@ bool FileUtilsWin32::renameFile(const std::string &oldfullpath, const std::strin
 
     if (FileUtils::getInstance()->isFileExist(newfullpath))
     {
-        if (!DeleteFile(_wNew.c_str()))
+        if (!DeleteFileW(_wNew.c_str()))
         {
             CCLOGERROR("Fail to delete file %s !Error code is 0x%x", newfullpath.c_str(), GetLastError());
         }
     }
 
-    if (MoveFile(_wOld.c_str(), _wNew.c_str()))
+    if (MoveFileW(_wOld.c_str(), _wNew.c_str()))
     {
         return true;
     }
@@ -452,7 +453,7 @@ bool FileUtilsWin32::createDirectory(const std::string& dirPath) const
         }
     }
 
-    if ((GetFileAttributes(path.c_str())) == INVALID_FILE_ATTRIBUTES)
+    if ((GetFileAttributesW(path.c_str())) == INVALID_FILE_ATTRIBUTES)
     {
         subpath = L"";
         for (unsigned int i = 0, size = dirs.size(); i < size; ++i)
@@ -462,7 +463,7 @@ bool FileUtilsWin32::createDirectory(const std::string& dirPath) const
             std::string utf8Path = StringWideCharToUtf8(subpath);
             if (!isDirectoryExist(utf8Path))
             {
-                BOOL ret = CreateDirectory(subpath.c_str(), NULL);
+                BOOL ret = CreateDirectoryW(subpath.c_str(), NULL);
                 if (!ret && ERROR_ALREADY_EXISTS != GetLastError())
                 {
                     CCLOGERROR("Fail create directory %s !Error code is 0x%x", utf8Path.c_str(), GetLastError());
@@ -479,7 +480,7 @@ bool FileUtilsWin32::removeFile(const std::string &filepath) const
     std::regex pat("\\/");
     std::string win32path = std::regex_replace(filepath, pat, "\\");
 
-    if (DeleteFile(StringUtf8ToWideChar(win32path).c_str()))
+    if (DeleteFileW(StringUtf8ToWideChar(win32path).c_str()))
     {
         return true;
     }
@@ -499,8 +500,8 @@ bool FileUtilsWin32::removeDirectory(const std::string& dirPath) const
     }
     std::wstring wpath = StringUtf8ToWideChar(dirPathCopy);
     std::wstring files = wpath + L"*.*";
-    WIN32_FIND_DATA wfd;
-    HANDLE  search = FindFirstFileEx(files.c_str(), FindExInfoStandard, &wfd, FindExSearchNameMatch, NULL, 0);
+    WIN32_FIND_DATAW wfd;
+    HANDLE  search = FindFirstFileExW(files.c_str(), FindExInfoStandard, &wfd, FindExSearchNameMatch, NULL, 0);
     bool ret = true;
     if (search != INVALID_HANDLE_VALUE)
     {
@@ -519,15 +520,15 @@ bool FileUtilsWin32::removeDirectory(const std::string& dirPath) const
                 }
                 else
                 {
-                    SetFileAttributes(temp.c_str(), FILE_ATTRIBUTE_NORMAL);
-                    ret = ret && DeleteFile(temp.c_str());
+                    SetFileAttributesW(temp.c_str(), FILE_ATTRIBUTE_NORMAL);
+                    ret = ret && DeleteFileW(temp.c_str());
                 }
             }
-            find = FindNextFile(search, &wfd);
+            find = FindNextFileW(search, &wfd);
         }
         FindClose(search);
     }
-    if (ret && RemoveDirectory(wpath.c_str()))
+    if (ret && RemoveDirectoryW(wpath.c_str()))
     {
         return true;
     }
