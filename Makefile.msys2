@@ -219,7 +219,7 @@ LDFLAGS += -lSDL2
 
 #for krkr2
 #LDFLAGS += -lboost-locale
-#LDFLAGS += -lfmt
+LDFLAGS += -lfmt
 #LDFLAGS += -lavcodec -lavformat -lavfilter -lswscale -lswresample
 #LDFLAGS += -lavutil
 
@@ -229,7 +229,7 @@ LDFLAGS += -lopencv_imgproc -lopencv_core
 
 #LDFLAGS += -lturbojpeg
 LDFLAGS += -llz4
-#LDFLAGS += -lspdlog
+LDFLAGS += -lspdlog
 LDFLAGS += -lopenal
 ###LDFLAGS += `pkg-config --libs gtk+-2.0`
 LDFLAGS += -larchive
