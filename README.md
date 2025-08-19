@@ -3,6 +3,7 @@
 
 ## Bugs
 * Android: Exit/Save will cause loop and no response, krkr2-no-vcpkg_v19_android_exit_save_loop.7z  
+* File manager UI scrolls not well
 
 ## TODO
 * Port to msys2, cocos2d-x-2.2.6_msys_v1.7z, cocos2d-x-2.2.6_mingw.7z
