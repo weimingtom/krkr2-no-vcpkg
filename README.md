@@ -30,6 +30,7 @@
 * $ mkdir build && cd build && cmake .. && make -j8 && ./bin/krkr2/krkr2 && cd ..
 
 ## For Arch Linux 2025.04.01, x86_64, in VirtualBox
+* For VirtualBox, change checkbox and combobox to enable Hyper-V, PAE/NX, Nested VT-x/AMD-V
 * $ sudo pacman -Sy
 * $ sudo pacman -S lftp gcc make cmake pkg-config  
 * $ sudo pacman -S glew glfw boost fmt opencv spdlog openal gtk2 minizip opusfile  
