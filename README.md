@@ -1,5 +1,7 @@
 # krkr2-no-vcpkg
 [WIP and not recommended] build krkr2 kirikiroid2 vcpkg version without vcpkg, with apt install instead
+Code base:  
+https://github.com/2468785842/krkr2/tree/73e9bfe153d2261486fb0245fa31d97271cfef9f  
 
 ## Bugs
 * Android: Exit/Save will cause loop and no response, krkr2-no-vcpkg_v19_android_exit_save_loop.7z  
