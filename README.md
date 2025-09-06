@@ -13,7 +13,8 @@ https://github.com/2468785842/krkr2/tree/73e9bfe153d2261486fb0245fa31d97271cfef9
 * Some code is changed to mine (see readme_android.txt, like core/environ/android/AndroidUtils.cpp and core/sound/win32/WaveMixer.cpp), not original code, need to be synchronized  
 * https://github.com/weimingtom/krkr2-no-vcpkg/blob/master/src/core/environ/android/AndroidUtils.cpp  
 * https://github.com/weimingtom/krkr2-no-vcpkg/blob/master/src/core/sound/win32/WaveMixer.cpp  
-* modify https://github.com/weimingtom/krkr2-no-vcpkg/blob/master/jni/main.cpp, include "../src/core/environ/cocos2d/AppDelegate.h"  
+* Modify https://github.com/weimingtom/krkr2-no-vcpkg/blob/master/jni/main.cpp, include "../src/core/environ/cocos2d/AppDelegate.h"  
+* Remove console.bat NDK_MODULE_PATH
 
 ## Recommended Development Environment for good audio music output 
 * Xubuntu 20.04 desktop amd64, in VMWare or VirtualBox  
