@@ -49,6 +49,26 @@ https://github.com/2468785842/krkr2/tree/73e9bfe153d2261486fb0245fa31d97271cfef9
 * \# make clean && make -j8 && make test
 * \# mkdir build && cd build && cmake .. && make -j8 && ./bin/krkr2/krkr2 && cd ..
 
+## (TODO, pending, not tested) For msys2, see readme_msys2.txt  
+* Check if install to c:/msys64, otherwise modify it in Makefile.msys2
+* $ pacman -Sy
+* $ pacman -S mingw-w64-x86_64-libpng
+* $ pacman -S mingw-w64-x86_64-libjpeg
+* $ pacman -S mingw-w64-x86_64-libwebp
+* $ pacman -S mingw-w64-x86_64-zlib
+* $ pacman -S mingw-w64-x86_64-glew
+* $ pacman -S mingw-w64-x86_64-gdb
+* $ pacman -S mingw-w64-x86_64-glfw
+* $ pacman -S mingw-w64-x86_64-opencv
+* $ pacman -S mingw-w64-x86_64-minizip
+* (Not sure) $ pacman -S mingw-w64-x86_64-boost
+* $ pacman -S mingw-w64-x86_64-fmt
+* $ pacman -S mingw-w64-x86_64-spdlog
+* $ mingw32-make.exe -f Makefile.msys2 clean
+* $ mingw32-make.exe -f Makefile.msys2 -j8
+* $ mingw32-make.exe -f Makefile.msys2 test
+* $ ./kirikiroid2.exe
+
 ## For Raspberry Pi OS 2023-05-03 Raspios Bullseye (Debian 11), arm32 (armhf), in Raspberry Pi 4B
 * $ sudo apt update
 * $ sudo apt install lftp gedit pkg-config make gcc g++ cmake
