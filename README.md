@@ -2,10 +2,12 @@
 [WIP and not recommended] build krkr2 kirikiroid2 vcpkg version without vcpkg, with apt install instead.  
 Code base:  
 https://github.com/2468785842/krkr2/tree/73e9bfe153d2261486fb0245fa31d97271cfef9f  
+**Not same as 2468785842/krkr2, Currently no windowEx.dll support, you can refer to 2468785842/krkr2 for windowEx.dll support**
 
 ## Bugs
 * Android: Exit/Save will cause loop and no response, krkr2-no-vcpkg_v19_android_exit_save_loop.7z  
 * File manager UI scrolls not well
+* No windowEx.dll support (No System.getMonitorInfo implementation), just be able to run a very simple demo data.xp3 (see top folder)
 
 ## TODO
 * Port to msys2, cocos2d-x-2.2.6_msys_v1.7z, cocos2d-x-2.2.6_mingw.7z
