@@ -353,6 +353,9 @@ CPPFLAGS += -I/usr/lib64/gtk-2.0/include
 #Raspberry Pi 4
 CPPFLAGS += -I/usr/lib/arm-linux-gnueabihf/glib-2.0/include
 CPPFLAGS += -I/usr/lib/arm-linux-gnueabihf/gtk-2.0/include
+#VisionFive2
+CPPFLAGS += -I/usr/lib/riscv64-linux-gnu/glib-2.0/include  
+CPPFLAGS += -I/usr/lib/riscv64-linux-gnu/gtk-2.0/include  
 
 CPPFLAGS += -I/usr/include/opus
 
