@@ -1855,6 +1855,8 @@ void TVPMainScene::pushUIForm(cocos2d::Node *ui, eEnterAni ani) {
     }
 }
 
+cocos2d::Node *ColorMask_ = 0;
+cocos2d::Node *ui_ = 0;
 void TVPMainScene::popUIForm(cocos2d::Node *form, eLeaveAni ani) {
     int n = UINode->getChildrenCount();
     if(n <= 0)
@@ -1890,9 +1892,15 @@ void TVPMainScene::popUIForm(cocos2d::Node *form, eLeaveAni ani) {
         ColorMask->runAction(FadeOut::create(UI_CHANGE_DURATION));
         ui->runAction(EaseQuadraticActionOut::create(
             MoveTo::create(UI_CHANGE_DURATION, Vec2(size.width, 0))));
+ui_ = ui;            
         this->runAction(Sequence::createWithTwoActions(
             DelayTime::create(UI_CHANGE_DURATION),
-            CallFunc::create([ui] { ui->removeFromParent(); })));
+            CallFunc::create([&ui_] { 
+            if (ui_) {
+            ui_->removeFromParent();
+            ui_ = NULL;
+            } 
+            })));
     } else if(ani == eLeaveToBottom) {
         cocos2d::Node *ColorMask = children.back();
         ColorMask->runAction(FadeOut::create(UI_CHANGE_DURATION));
@@ -1901,9 +1909,20 @@ void TVPMainScene::popUIForm(cocos2d::Node *form, eLeaveAni ani) {
             CCAssert(form == ui, "must be the same form");
         ui->runAction(EaseQuadraticActionIn::create(MoveTo::create(
             UI_CHANGE_DURATION, Vec2(0, -ui->getContentSize().height))));
+#if 1       
+printf("<<<<<<<<<<<<<<<< runAction ColorMask->removeFromParent()\n");  
+ColorMask_ = ColorMask;
         runAction(Sequence::createWithTwoActions(
             DelayTime::create(UI_CHANGE_DURATION),
-            CallFunc::create([=]() { ColorMask->removeFromParent(); })));
+            CallFunc::create([&ColorMask_]() {
+            //FIXME: click title button and then click blank area crash here 
+            printf("<<<<<<<<<<<<<<<< ColorMask->removeFromParent()\n");
+            if (ColorMask_) { 
+            ColorMask_->removeFromParent(); 
+            ColorMask_ = NULL; 
+            } 
+            })));
+#endif            
     }
 }
 

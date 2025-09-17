@@ -1,3 +1,5 @@
+#include <libgen.h> //for dirname
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -178,7 +180,9 @@ printf("\n>>>>>>>>>>> TVPShowSimpleMessageBox 1 start\n");
 #if 0            
             gtk_dialog_run(GTK_DIALOG(dialog)); //only for modal
             gtk_widget_destroy(widget); //only for modal
-#else            
+#else       
+            gtk_window_set_keep_above(GTK_WINDOW(dialog), TRUE);
+            //gtk_window_set_type_hint(GTK_WINDOW(dialog), GDK_WINDOW_TYPE_HINT_DOCK); //top most
             g_signal_connect_swapped(GTK_OBJECT(dialog), "response", G_CALLBACK(response_app), dialog); //non-modal                                 
             g_signal_connect(GTK_OBJECT(dialog), "destroy", GTK_SIGNAL_FUNC(close_app), dialog); //non-modal
             gtk_widget_show_all(dialog); //non-modal
@@ -213,6 +217,8 @@ last_response_id = -1;
                     return 1; // NO 1
             }
 #else
+            gtk_window_set_keep_above(GTK_WINDOW(dialog), TRUE);
+            //gtk_window_set_type_hint(GTK_WINDOW(dialog), GDK_WINDOW_TYPE_HINT_DOCK); //top most
             g_signal_connect_swapped(GTK_OBJECT(dialog), "response", G_CALLBACK(response_app), dialog); //non-modal                                 
             g_signal_connect(GTK_OBJECT(dialog), "destroy", GTK_SIGNAL_FUNC(close_app), dialog); //non-modal
             gtk_widget_show_all(dialog); //non-modal
@@ -344,7 +350,10 @@ bool TVPRenameFile(const std::string &from, const std::string &to) {
 
 void TVPSendToOtherApp(const std::string &filename) {}
 
-std::vector<std::string> TVPGetDriverPath() { return { "/" }; }
+std::vector<std::string> TVPGetDriverPath() { 
+printf("<<<<<<<<<<<TVPGetDriverPath<<<<<\n");
+return { "/" }; 
+}
 
 std::string TVPGetDefaultFileDir() {
     char buffer[PATH_MAX];
@@ -357,12 +366,13 @@ std::string TVPGetDefaultFileDir() {
     // symbol link
     char resolved[PATH_MAX];
     if(realpath(buffer, resolved) != nullptr) {
-        return std::string(resolved);
+        return std::string(dirname(resolved)); //FIXME:added, need dirname;
     }
-    return std::string(buffer);
+    return std::string(dirname(buffer)); //FIXME:added, need dirname;
 }
 
 std::vector<std::string> TVPGetAppStoragePath() {
+printf("<<<<<<<<<<<TVPGetAppStoragePath<<<<<\n");
     std::vector<std::string> ret;
     ret.emplace_back(TVPGetDefaultFileDir());
     return ret;

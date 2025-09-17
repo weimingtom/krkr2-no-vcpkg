@@ -139,15 +139,19 @@ tTJSBinaryStream *tTVPFileMedia::Open(const ttstr &name, tjs_uint32 flags) {
 
 void TVPListDir(const std::string &folder,
                 std::function<void(const std::string &, int)> cb) {
-#if !MY_USE_MINLIB
+#if 0 //!MY_USE_MINLIB
 #else
 	fprintf(stderr, "%s\n", "==================>TVPListDir");
 #endif	
     DIR *dirp;
     dirent *direntp;
     tTVP_stat stat_buf;
-printf("==================>TVPListDir,opendir>>>> %s\n", folder.c_str());	
+printf("==================>TVPListDir,opendir>>>> %s\n", folder.c_str());
+#if defined(__MINGW32__)	
     if((dirp = opendir((folder + "\\").c_str()))) {
+#else
+    if((dirp = opendir(folder.c_str()))) {
+#endif    
         while((direntp = readdir(dirp)) != nullptr) {
             std::string fullpath = folder + "/" + direntp->d_name;
 printf("==================>TVPListDir,while, %s, %s\n", fullpath.c_str(), folder.c_str());			

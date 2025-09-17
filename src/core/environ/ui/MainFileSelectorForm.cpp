@@ -45,6 +45,7 @@ static void _AskExit() {
 bool TVPCheckIsVideoFile(const char *uri);
 
 static std::string _GetHistoryXMLPath() {
+printf("<<<<<<<<<_GetHistoryXMLPath %s<<<<<<<<<<\n", (TVPGetInternalPreferencePath() + FileName_RecentPathListXML).c_str());
     return TVPGetInternalPreferencePath() + FileName_RecentPathListXML;
 }
 
@@ -523,6 +524,7 @@ void TVPMainFileSelectorForm::onShowPreferenceConfigAt(
 }
 
 void TVPMainFileSelectorForm::ListHistory() {
+printf(">>>>>>>>>>>>TVPMainFileSelectorForm::ListHistory>>>>>>>>>\n");
     if(!_historyList)
         return;
     _historyList->removeAllChildren();

@@ -330,6 +330,7 @@ void TVPBaseFileSelectorForm::onCellLongPress(int idx) {
 
 void TVPBaseFileSelectorForm::getShortCutDirList(
     std::vector<std::string> &pathlist) {
+printf("<<<<<<< TVPBaseFileSelectorForm::getShortCutDirList\n");    
     std::vector<std::string> paths = TVPGetDriverPath();
     for(const std::string &path : paths) {
         pathlist.emplace_back(path);
@@ -350,6 +351,7 @@ void TVPBaseFileSelectorForm::onTitleClicked(cocos2d::Ref *owner) {
     std::vector<Widget *> cells;
     std::vector<Button *> buttons;
     auto func = [this](cocos2d::Ref *node) {
+printf("<<<<<<<<<<<<< callback item->addClickEventListener(func)<<<<<<\n");    
         ListDir(dynamic_cast<Button *>(node)->getCallbackName());
         TVPMainScene::GetInstance()->popUIForm(nullptr,
                                                TVPMainScene::eLeaveToBottom);
@@ -361,14 +363,15 @@ void TVPBaseFileSelectorForm::onTitleClicked(cocos2d::Ref *owner) {
         Button *item = dynamic_cast<Button *>(reader.findController("item"));
         item->setCallbackName(path);
         item->setTitleText(path);
-#if defined(__MINGW32__)
+#if 1//defined(__MINGW32__)
 printf("TVPBaseFileSelectorForm::onTitleClicked, FileSelectorForm.cpp path == %s\n", path.c_str());
 #endif
+	//item->setSwallowTouches(false);
         item->addClickEventListener(func);
         cells.emplace_back(cell);
         buttons.emplace_back(item);
     }
-#if defined(__MINGW32__)
+#if 1//defined(__MINGW32__)
 printf("TVPBaseFileSelectorForm::onTitleClicked, FileSelectorForm.cpp end\n");
 #endif	
     _listform = TVPListForm::create(cells);
@@ -845,6 +848,7 @@ TVPListForm::create(const std::vector<cocos2d::ui::Widget *> &cells) {
 
 void TVPListForm::initFromInfo(
     const std::vector<cocos2d::ui::Widget *> &cells) {
+printf("==========>TVPListForm::initFromInfo\n");    
     init();
     float scale = TVPMainScene::GetInstance()->getUIScale();
     cocos2d::Size sceneSize =
@@ -1040,6 +1044,7 @@ void TVPBaseFileSelectorForm::FileItemCellImpl::initFromFile(
     Widget *HighLight =
         static_cast<Widget *>(reader.findController(str_highlight));
     if(HighLight) {
+        HighLight->setSwallowTouches(false); //FIXME: added, for scroll problem
         HighLight->addClickEventListener(std::bind(
             &FileItemCellImpl::onClicked, this, std::placeholders::_1));
         HighLight->addTouchEventListener(
