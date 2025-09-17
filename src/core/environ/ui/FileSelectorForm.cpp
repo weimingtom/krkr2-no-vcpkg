@@ -122,7 +122,11 @@ printf("TVPBaseFileSelectorForm::ListDir(\"%s\");\n", path.c_str());
     std::pair<std::string, std::string> split_path = PathSplit(path);
     ParentPath = split_path.first;
     if(_title) {
-        _title->setTitleText(split_path.second);
+    	if (path == "/") {
+    		_title->setTitleText("/"); //FIXME: don't display empty title button
+        } else {
+        	_title->setTitleText(split_path.second);
+        }
 
         Size dispSize = _title->getTitleRenderer()->getContentSize();
         Size realSize = _title->getContentSize();
@@ -358,9 +362,41 @@ printf("<<<<<<<<<<<<< callback item->addClickEventListener(func)<<<<<<\n");
     };
     for(const std::string &path : paths) {
         CSBReader reader;
+#if 0
         auto *cell = dynamic_cast<Widget *>(
             reader.Load("ui/ListItem.csb")->getChildByName("item"));
+#else
+	Node *node = reader.Load("ui/ListItem.csb");
+
+#if 1
+	float scale = TVPMainScene::GetInstance()->getUIScale();
+	cocos2d::Size sceneSize =
+	TVPMainScene::GetInstance()->getUINodeSize() / scale;
+	sceneSize.width *= 0.8f;
+	sceneSize.height *= 0.8f;	
+
+	Size size1 = node->getContentSize();
+	size1.width = sceneSize.width; //FIXME: added, title button pop list width
+	node->setContentSize(size1);
+#endif   
+
+	Widget *cell = Widget::create();
+	LinearLayoutParameter* lp1 = LinearLayoutParameter::create();
+	//lp1->setMargin(Margin(0, 10, 0, 10));
+	lp1->setGravity(LinearLayoutParameter::LinearGravity::CENTER_HORIZONTAL);
+	cell->setLayoutParameter(lp1);
+	//node->setPosition(Vec2(300, 0));
+	cell->addChild(node, 0, "_nodeChild"); //see below _nodeChild
+	cell->setContentSize(node->getContentSize());	
+#endif
         Button *item = dynamic_cast<Button *>(reader.findController("item"));
+
+#if 1
+	Size size2 = item->getContentSize();
+	size2.width = sceneSize.width; //FIXME: added, title button pop list width
+	item->setContentSize(size2);
+#endif        
+        
         item->setCallbackName(path);
         item->setTitleText(path);
 #if 1//defined(__MINGW32__)
@@ -873,14 +909,19 @@ printf("==========>TVPListForm::initFromInfo\n");
     _root->setContentSize(sceneSize);
     ui::Helper::doLayout(_root);
     float width = listview->getContentSize().width;
-    for(Widget *cell : cells) {
+    for(Widget *cell : cells) {   
         Size size = cell->getContentSize();
         size.width = width;
         cell->setContentSize(size);
         ui::Helper::doLayout(cell);
+#if 1 //FIXME:added, title button click offset bug, search _nodeChild
+Node *nodeChild = cell->getChildByName("_nodeChild"); //see upper, search _nodeChild
+nodeChild->setPositionX((width - nodeChild->getContentSize().width) / 2.0f);
+#endif          
         listview->pushBackCustomItem(cell);
     }
-    if(listview->getItems().back()->getBottomBoundary() < 0) {
+    if(listview->getItems().size() > 0 && //FIXME:added, title button click list button offset bug
+    	listview->getItems().back()->getBottomBoundary() < 0) {
         listview->setClippingEnabled(true);
     } else {
         listview->setBounceEnabled(false);
