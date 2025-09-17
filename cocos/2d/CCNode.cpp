@@ -948,7 +948,7 @@ void Node::addChild(Node *child, int localZOrder, int tag)
 void Node::addChild(Node* child, int localZOrder, const std::string &name)
 {	
     CCASSERT(child != nullptr, "Argument must be non-nil");
-#if defined(__MINGW32__)
+#if 1 //defined(__MINGW32__)
 	if (child->_parent != nullptr) {
 		printf("Node::addChild, child->_parent != nullptr, not good\n");
 	}

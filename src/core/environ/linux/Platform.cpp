@@ -137,6 +137,21 @@ std::string TVPGetCurrentLanguage() {
     return locale; // 如果没有国家代码（如 "en"）
 }
 
+static int last_response_id = -1;
+
+void response_app(GtkWidget *widget, gint response_id, gpointer data) {
+printf("\n>>>>>>>>>>> response start, %d\n", response_id);
+last_response_id = response_id;
+	gtk_widget_destroy(widget); //close
+printf("\n>>>>>>>>>>> response end\n"); 
+}
+
+void close_app(GtkWidget *widget, gpointer data) {
+printf("\n>>>>>>>>>>> close start\n"); 
+	gtk_main_quit(); //exit
+printf("\n>>>>>>>>>>> close end\n"); 
+}
+
 int TVPShowSimpleMessageBox(const ttstr &text, const ttstr &caption,
                             const std::vector<ttstr> &vecButtons) {
     GtkWidget *dialog = nullptr;
@@ -148,28 +163,48 @@ int TVPShowSimpleMessageBox(const ttstr &text, const ttstr &caption,
 
     switch(vecButtons.size()) {
         case 1:
+#if 1        
+//If crashed by gdk_dialog_run and gdk_window_enable_synchronized_configure segmentaion fault, check gtk_init(&argc, &argv);
+printf("\n>>>>>>>>>>> TVPShowSimpleMessageBox 1 start\n");                 
             dialog = gtk_message_dialog_new(
                 NULL, // 父窗口
-                GTK_DIALOG_MODAL, // 模态对话框
+                GTK_DIALOG_DESTROY_WITH_PARENT,//non-modal // 模态对话框 //GTK_DIALOG_MODAL,
                 GTK_MESSAGE_INFO, // 消息类型（信息）
                 GTK_BUTTONS_OK, // 按钮类型
                 "%s", text.AsStdString().c_str() // 消息内容
             );
             gtk_window_set_title(GTK_WINDOW(dialog),
                                  caption.AsStdString().c_str());
+#if 0            
+            gtk_dialog_run(GTK_DIALOG(dialog)); //only for modal
+            gtk_widget_destroy(widget); //only for modal
+#else            
+            g_signal_connect_swapped(GTK_OBJECT(dialog), "response", G_CALLBACK(response_app), dialog); //non-modal                                 
+            g_signal_connect(GTK_OBJECT(dialog), "destroy", GTK_SIGNAL_FUNC(close_app), dialog); //non-modal
+            gtk_widget_show_all(dialog); //non-modal
+            gtk_main();  //non-modal
+#endif            
+printf("\n>>>>>>>>>>> TVPShowSimpleMessageBox 1 end\n");                 
+#else
+GDK_THREADS_ENTER();
+	    dialog = gtk_dialog_new();
             gtk_dialog_run(GTK_DIALOG(dialog));
+GDK_THREADS_LEAVE();
+#endif                                 
             return 0;
             break;
         case 2:
+last_response_id = -1;        
             dialog = gtk_message_dialog_new(
                 NULL, // 父窗口
-                GTK_DIALOG_MODAL, // 模态对话框
+                GTK_DIALOG_DESTROY_WITH_PARENT,//non-modal //GTK_DIALOG_MODAL, // 模态对话框
                 GTK_MESSAGE_INFO, // 消息类型（信息）
                 GTK_BUTTONS_YES_NO, // 按钮类型
                 "%s", text.AsStdString().c_str() // 消息内容
             );
             gtk_window_set_title(GTK_WINDOW(dialog),
                                  caption.AsStdString().c_str());
+#if 0                                 
             int result = gtk_dialog_run(GTK_DIALOG(dialog));
             switch(result) {
                 case GTK_RESPONSE_YES:
@@ -177,6 +212,19 @@ int TVPShowSimpleMessageBox(const ttstr &text, const ttstr &caption,
                 default:
                     return 1; // NO 1
             }
+#else
+            g_signal_connect_swapped(GTK_OBJECT(dialog), "response", G_CALLBACK(response_app), dialog); //non-modal                                 
+            g_signal_connect(GTK_OBJECT(dialog), "destroy", GTK_SIGNAL_FUNC(close_app), dialog); //non-modal
+            gtk_widget_show_all(dialog); //non-modal
+            gtk_main();  //non-modal
+            switch (last_response_id) {
+                case GTK_RESPONSE_YES:
+                    return 0; // YES 0
+                default:
+                    return 1; // NO 1            	
+            }
+#endif            
+            
             break;
     }
     return -1;

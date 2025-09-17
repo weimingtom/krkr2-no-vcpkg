@@ -53,6 +53,11 @@ void cocos_android_app_init(JNIEnv* env) {
 
 
 #else
+#if !MY_USE_MINLIB
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#endif
+
 #include <memory>
 
 #include <android/log.h>
@@ -69,6 +74,15 @@ std::unique_ptr<TVPAppDelegate> appDelegate;
 
 void cocos_android_app_init(JNIEnv* env) {
     LOGD("cocos_android_app_init");
+#if !MY_USE_MINLIB
+    spdlog::set_level(spdlog::level::debug);
+
+    static auto core_logger = spdlog::stdout_color_mt("core");
+    static auto tjs2_logger = spdlog::stdout_color_mt("tjs2");
+    static auto plugin_logger = spdlog::stdout_color_mt("plugin");
+
+    spdlog::set_default_logger(core_logger);
+#endif
     appDelegate.reset(new TVPAppDelegate());
 }
 
