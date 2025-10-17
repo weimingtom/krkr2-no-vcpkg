@@ -293,11 +293,11 @@ CPPFLAGS += -I./src/core/environ/win32
 CPPFLAGS += -I./src/core/extension
 CPPFLAGS += -I./src/core
 CPPFLAGS += -I./src/core/external/onig
-#CPPFLAGS += -I./src/core/external/opencv-2.4.13/modules/core/include
-#CPPFLAGS += -I./src/core/external/opencv-2.4.13/modules/dynamicuda/include
-#CPPFLAGS += -I./src/core/external/opencv-2.4.13/modules/imgproc/include
-#CPPFLAGS += -I./src/core/external/opencv-2.4.13
-CPPFLAGS += -I./src/core/external/freetype-2.5.0.1/include
+###CPPFLAGS += -I./src/core/external/opencv-2.4.13/modules/core/include
+###CPPFLAGS += -I./src/core/external/opencv-2.4.13/modules/dynamicuda/include
+###CPPFLAGS += -I./src/core/external/opencv-2.4.13/modules/imgproc/include
+###CPPFLAGS += -I./src/core/external/opencv-2.4.13
+###CPPFLAGS += -I./src/core/external/freetype-2.5.0.1/include
 
 #vorbis
 CPPFLAGS += -I./src/core/external/libvorbis-1.2.0/include/
@@ -391,7 +391,7 @@ LDFLAGS += -latomic
 LDFLAGS += -lSDL2
 
 #for krkr2
-#LDFLAGS += -lboost-locale
+#LDFLAGS += -lboost_locale
 LDFLAGS += -lfmt
 #LDFLAGS += -lavcodec -lavformat -lavfilter -lswscale -lswresample
 #LDFLAGS += -lavutil
