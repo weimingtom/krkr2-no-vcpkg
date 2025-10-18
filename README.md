@@ -17,6 +17,7 @@ https://github.com/2468785842/krkr2/tree/73e9bfe153d2261486fb0245fa31d97271cfef9
 * https://github.com/weimingtom/krkr2-no-vcpkg/blob/master/src/core/sound/win32/WaveMixer.cpp  
 * Modify https://github.com/weimingtom/krkr2-no-vcpkg/blob/master/jni/main.cpp, include "../src/core/environ/cocos2d/AppDelegate.h"  
 * Remove console.bat NDK_MODULE_PATH
+* Use OpenAL (?) for audio output instead of SDL2
 
 ## Recommended Development Environment for good audio music output 
 * Xubuntu 20.04 desktop amd64, in VMWare or VirtualBox  
@@ -30,6 +31,7 @@ https://github.com/2468785842/krkr2/tree/73e9bfe153d2261486fb0245fa31d97271cfef9
 * $ mkdir build && cd build && cmake .. && make -j8 && ./bin/krkr2/krkr2 && cd ..
 
 ## For Fedora 41, x86_64, in VirtualBox
+* $ sudo yum update
 * $ sudo yum install lftp gcc g++ make cmake gedit pkg-config
 * $ sudo yum install glew-devel freetype-devel libjpeg-devel glfw-devel boost-devel fmt-devel opencv-devel libwebp-devel lz4-devel spdlog-devel openal-devel SDL2-devel gtk2-devel minizip-devel libarchive-devel libvorbis-devel opusfile-devel
 * $ make clean && make -j8 && make test
@@ -38,7 +40,7 @@ https://github.com/2468785842/krkr2/tree/73e9bfe153d2261486fb0245fa31d97271cfef9
 ## For Arch Linux 2025.04.01, x86_64, in VirtualBox
 * For VirtualBox, change checkbox and combobox to enable Hyper-V, PAE/NX, Nested VT-x/AMD-V
 * $ sudo pacman -Sy
-* $ sudo pacman -S lftp gcc make cmake pkg-config  
+* $ sudo pacman -S lftp gcc make cmake pkg-config unzip 
 * $ sudo pacman -S glew glfw boost fmt opencv spdlog openal gtk2 minizip opusfile  
 * $ make clean && make -j8 && make test
 * $ mkdir build && cd build && cmake .. && make -j8 && ./bin/krkr2/krkr2 && cd ..
