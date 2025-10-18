@@ -46,6 +46,7 @@ https://github.com/2468785842/krkr2/tree/73e9bfe153d2261486fb0245fa31d97271cfef9
 * $ mkdir build && cd build && cmake .. && make -j8 && ./bin/krkr2/krkr2 && cd ..
 
 ## For Debian 12.10.0, amd64, in VirtualBox
+* For VirtualBox, change checkbox and combobox to enable Hyper-V, PAE/NX, Nested VT-x/AMD-V
 * \# sudo apt update
 * \# sudo apt install lftp gedit pkg-config make gcc g++ cmake
 * \# sudo apt install libglew-dev libfreetype-dev libglfw3-dev libsdl2-dev libvorbis-dev libwebp-dev  libboost-locale-dev libfmt-dev libopencv-dev liblz4-dev libspdlog-dev libopenal-dev libgtk2.0-dev libarchive-dev libopusfile-dev libminizip-dev libjpeg-dev
