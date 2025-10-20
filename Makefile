@@ -218,7 +218,7 @@ CPPFLAGS2 :=
 #CPPFLAGS2 += -std=c++11 
 CPPFLAGS2 += -std=c++17 
 
-CPPFLAGS += -fno-exceptions 
+#CPPFLAGS += -fno-exceptions 
 CPPFLAGS += -fexceptions 
 
 CPPFLAGS += -Wno-deprecated-declarations 
